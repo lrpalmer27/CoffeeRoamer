@@ -1,0 +1,19 @@
+---
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+---
+
+<div id="map" style="width:100%; height:500px;"></div>
+
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const map = new maplibregl.Map({
+      container: "map",
+      style: "https://demotiles.maplibre.org/style.json",
+      center: [0, 0],
+      zoom: 2,
+    });
+
+    map.addControl(new maplibregl.NavigationControl());
+  });
+</script>
