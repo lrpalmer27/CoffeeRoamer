@@ -6,7 +6,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://CoffeeRoamer.github.io',
-	base: '/docs',
+	site: 'https://lrpalmer27.github.io/CoffeeRoamer',
 	integrations: [mdx(), sitemap()],
 });
