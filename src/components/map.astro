@@ -9,11 +9,12 @@ import "maplibre-gl/dist/maplibre-gl.css";
   window.addEventListener("DOMContentLoaded", () => {
     const map = new maplibregl.Map({
       container: "map",
-      style: "https://demotiles.maplibre.org/style.json",
-      center: [0, 0],
-      zoom: 2,
+      style: '../Public/mapstyle.json',
+      center: [-100,48],
+      zoom: 2.5,
     });
 
     map.addControl(new maplibregl.NavigationControl());
+
   });
 </script>
