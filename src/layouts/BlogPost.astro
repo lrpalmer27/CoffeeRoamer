@@ -80,10 +80,23 @@ const { title, description, location, pubDate, updatedDate, heroImage,
 						<hr />
 					</div>
 					<slot />
-				</div>
-				<div>
-					<h3 style="text-align: center" > Overall Rankings </h3>
-					<!-- USE THIS AREA TO CREATE A -->
+
+					<h3 style="text-align: center; margin: 0 0 0.5rem 0;" > Rankings </h3>
+					<div class=stargrid>
+						<div> Pastries: </div>
+						<div class="stars" style={`--w: ${PastriesRanking}%;`}></div>
+
+						<div> Parking: </div>
+						<div class="stars" style={`--w: ${ParkingRanking}%;`}></div>
+						
+						<div> Coffee: </div>
+						<div class="stars" style={`--w: ${CoffeeRanking}%;`}></div>
+
+						<div> Overall: </div>
+						<!-- <div class="star-generator" ranking="OverallRanking"> ★★★★★ </div> -->
+						<div class="stars" style={`--w: ${OverallRanking}%;`}></div>
+					</div>
+
 				</div>
 			</article>
 		</main>

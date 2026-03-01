@@ -3,7 +3,12 @@ title: 'Markdown Style Guide'
 description: 'Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.'
 pubDate: 'Jun 19 2024'
 heroImage: '../../assets/Latte_and_dark_coffee.jpg'
-location: 
+location: 'as'
+
+ParkingRanking: 5
+PastriesRanking: 5
+CoffeeRanking: 1
+OverallRanking: 3
 ---
 
 Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.

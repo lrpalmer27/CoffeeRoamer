@@ -12,10 +12,10 @@ const blog = defineCollection({
 			// Optional location/frontmatter for mapping posts
 			location: z.string().optional(),
 			// Numeric rankings (1-5 scale)
-			PastriesRanking: z.number().optional(),
-			ParkingRanking: z.number().optional(),
-			CoffeeRanking: z.number().optional(),
-			OverallRanking: z.number().optional(),
+			PastriesRanking: z.number().optional().transform(val => val ? (val / 5) * 100 : 0),
+			ParkingRanking: z.number().optional().transform(val => val ? (val / 5) * 100 : 0),
+			CoffeeRanking: z.number().optional().transform(val => val ? (val / 5) * 100 : 0),
+			OverallRanking: z.number().optional().transform(val => val ? (val / 5) * 100 : 0),
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
