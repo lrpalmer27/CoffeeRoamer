@@ -1,14 +1,16 @@
 ---
-import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 ---
 
 <div id="map" style="width:100%; height:500px;"></div>
 
 <script>
+import maplibregl from "maplibre-gl";
+
   window.addEventListener("DOMContentLoaded", () => {
     const map = new maplibregl.Map({
       container: "map",
+      // style: '${import.meta.env.`CoffeeRoamer`}/Public/mapstyle.json',
       style: '../Public/mapstyle.json',
       center: [-100,48],
       zoom: 2.5,
