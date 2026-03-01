@@ -9,7 +9,7 @@ See scratchpad for more information for the target of this project
 
 
 # wishlist features
-1. Location tags to show posts on map
-2. Filtering map by location/rating/date etc 
-3. Make a custom URL and start publishing there.
-4.
+- Add star rating CSS feature at bottom of posts
+- Location tags to show posts on map
+- Filtering map by location/rating/date etc 
+- Make a custom URL and start publishing there.

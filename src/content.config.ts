@@ -9,6 +9,13 @@ const blog = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			// Optional location/frontmatter for mapping posts
+			location: z.string().optional(),
+			// Numeric rankings (1-5 scale)
+			PastriesRanking: z.number().optional(),
+			ParkingRanking: z.number().optional(),
+			CoffeeRanking: z.number().optional(),
+			OverallRanking: z.number().optional(),
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
