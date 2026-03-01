@@ -49,12 +49,12 @@ main {
 	margin: auto;
 	padding: 1em 1em;
 }
+
 maparea {
 	display: grid;
 	grid-template-columns: 20% auto;
 	grid-template-rows: 8% auto;
 	width: 100%;
-	/* max-width: 720px; */
 	margin: auto;
 	padding: 0.5em 0.5em;
 }
@@ -102,6 +102,12 @@ maparea {
 
 }
 
+.blogsplitscreen{
+	display: grid;
+	grid-template-columns: auto 30%;
+	align-items: top;
+}
+
 h1,
 h2,
 h3,
@@ -142,7 +148,7 @@ a:hover {
 	color: var(--accent);
 }
 p {
-	font-size: 1em;
+	font-size: 0.9em;
 	margin-bottom: 1em;
 }
 .prose p {
@@ -193,7 +199,7 @@ hr {
 	border: none;
 	border-top: 1px solid rgb(var(--gray-light));
 }
-@media (max-width: 720px) {
+@media (max-width: 760px) {
 	body {
 		font-size: 18px;
 	}
