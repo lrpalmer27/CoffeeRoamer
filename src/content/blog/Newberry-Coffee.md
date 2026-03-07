@@ -2,6 +2,7 @@
 title: 'Newberry Coffee'
 description: 'Coffee Roaster and Cafe in Torrance'
 location: 18236 Prairie Ave, Torrance, CA 90504
+coords: [33.86494873042227, -118.34321141871561]
 pubDate: '03/07/2026'
 heroImage: '../../assets/NEWBERRY-COFFEE_03-07-2026_1.JPG'
 

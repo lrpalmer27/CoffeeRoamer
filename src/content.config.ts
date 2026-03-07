@@ -11,6 +11,7 @@ const blog = defineCollection({
 			description: z.string(),
 			// Optional location/frontmatter for mapping posts
 			location: z.string().optional(),
+			coords: z.array(z.number()).length(2).optional(),
 			// Numeric rankings (1-5 scale)
 			PastriesRanking: z.number().optional().transform(val => val ? (val / 5) * 100 : 0),
 			ParkingRanking: z.number().optional().transform(val => val ? (val / 5) * 100 : 0),
