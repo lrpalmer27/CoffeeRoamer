@@ -4,7 +4,6 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import {BASE} from './src/consts.ts';
-
 import db from '@astrojs/db';
 
 // https://astro.build/config
