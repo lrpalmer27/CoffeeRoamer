@@ -1,64 +1,74 @@
 ---
 import "maplibre-gl/dist/maplibre-gl.css";
+import maplibregl from "maplibre-gl";
 
-const { title, coords } = Astro.props;
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+
+const orderedPosts = posts.map(post=>({
+  coords: post.data.coords,
+  title: post.data.title
+}));
+
 ---
 
 <div id="map" 
   style="width:100%; height:500px;"
-  data-coords={JSON.stringify(coords)}
-  data-title={title}
 ></div>
 
-<script type="module">
-import maplibregl from "maplibre-gl";
-
+<script define:vars={{orderedPosts}}>
+  // console.log("coords var ->",orderedPosts.coords);
   window.addEventListener("DOMContentLoaded", () => {
-    const mapElement = document.getElementById("map");
-    const rawCoords = JSON.parse(mapElement.dataset.coords || "[]");
-    const mapTitle = mapElement.dataset.title;
-
     const map = new maplibregl.Map({
       container: "map",
-      // style: '${import.meta.env.`CoffeeRoamer`}/Public/mapstyle.json',
-      style: './mapstyle.json',
+      // style: "https://demotiles.maplibre.org/style.json", // testing demo tile
+      style: '../public/mapstyle.json',
       center: [-100,48],
       zoom: 2.5,
     });
 
-  map.addControl(new maplibregl.NavigationControl());
-
-  map.on('load', () => {
-    // 2. Transform the raw coordinates into GeoJSON Features
-    const features = rawCoords.map(c => ({
+    const features = orderedPosts.map(c => ({
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": c // Expects [longitude, latitude]
-      },
-      "properties": { "name": mapTitle }
+        "coordinates": [c.coords[1], c.coords[0]]
+        }, // this is changing from latlong to longlat
+      "properties": { "name": c.title },
     }));
+    
+    map.on("load",() => {
+      map.addSource('CoffeeCoordinates',{
+        type: 'geojson',
+        data: {
+            "type": "FeatureCollection",
+            "features": features
+          }
+      });
 
-    map.addSource('CoffeeCoordinates',{
-      type: 'geojson',
-      data: {
-          "type": "FeatureCollection",
-          "features": features
-        }
+      map.addLayer({
+          'id': 'coffee-points',
+          'type': 'circle',
+          'source': 'CoffeeCoordinates',
+          'paint': {
+            'circle-radius': 6,
+            'circle-color': 'red', // Coffee brown
+            'circle-stroke-width': 1,
+            'circle-stroke-color': '#fff'
+          }
+      });
+
+      map.addControl(new maplibregl.NavigationControl());
+
     });
 
-    map.addLayer({
-        'id': 'coffee-points',
-        'type': 'circle',
-        'source': 'CoffeeCoordinates',
-        'paint': {
-          'circle-radius': 6,
-          'circle-color': '#6F4E37', // Coffee brown
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff'
-        }
+    map.on("click", "coffee-points", (e) => {
+      new maplibregl.Popup()
+        .setLngLat(e.features[0].geometry.coordinates)
+        .setHTML(`<strong>${title}</strong>`)
+        .addTo(map);
     });
 
-  })
-  })
+  });
 </script>
