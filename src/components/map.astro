@@ -18,7 +18,7 @@ const orderedPosts = posts.map(post=>({
 ---
 
 <div id="map" 
-  style="width:100%; height:500px;"
+  style="width:100%; height:600px;"
 ></div>
 
 <script define:vars={{orderedPosts, BASE}}>
@@ -42,6 +42,7 @@ const orderedPosts = posts.map(post=>({
     });
     
     map.addControl(new maplibregl.NavigationControl());
+    
     const features = orderedPosts.map(c => ({
       "type": "Feature",
       "geometry": {
