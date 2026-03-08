@@ -17,21 +17,24 @@
 		rgba(var(--gray), 33%);
 }
 @font-face {
-	font-family: "Atkinson";
-	src: url("fonts/atkinson-regular.woff") format("woff");
+	/* font-family: "Atkinson"; */
+	/* src: url(`${BASE}fonts/atkinson-regular.woff`) format("woff"); */
+	font-family: "myFont";
+	src: url("fonts/SpecialElite-Regular.ttf") format('truetype');
 	font-weight: 300;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
-	font-family: "Atkinson";
-	src: url("fonts/atkinson-bold.woff") format("woff");
+	font-family: "myFont";
+	/* src: url("fonts/atkinson-bold.woff") format("woff"); */
+	src: url("fonts/SpecialElite-Regular.ttf") format('truetype');
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
 body {
-	font-family: "Atkinson", sans-serif;
+	font-family: "myFont";
 	margin: 0;
 	padding: 0;
 	text-align: left;
