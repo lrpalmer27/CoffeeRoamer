@@ -84,22 +84,11 @@ const orderedPosts = posts.map(post=>({
       map.getCanvas().style.cursor = "pointer"; // change cursor
       const feature = e.features[0]; // The clicked feature
 
-      // new maplibregl.Popup()
-      //   .setLngLat(feature.geometry.coordinates)
-      //   // .setHTML(`<strong>${feature.properties.name}</strong>`)
-      //   .setHTML(`<a href=${BASE}posts/${feature.properties.name}>${feature.properties.name}</a>`)
-      //   .addTo(map);
-
       popup
         .setLngLat(feature.geometry.coordinates)
         .setHTML(`<a href=${BASE}posts/${feature.properties.id}> ${feature.properties.name}</a>`)
         .addTo(map);
     });
-
-    // map.on("mouseleave", "coffee-points", () => {
-    //   map.getCanvas().style.cursor = ""; // reset cursor
-    //   popup.remove();
-    // });
 
   });
 </script>
