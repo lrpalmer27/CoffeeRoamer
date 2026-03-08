@@ -1,6 +1,7 @@
 ---
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
+import {BASE} from '../consts.ts';
 
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
@@ -8,8 +9,10 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('blog');
 
 const orderedPosts = posts.map(post=>({
+  id: post.id,
   coords: post.data.coords,
-  title: post.data.title
+  title: post.data.title,
+  description: post.data.description,
 }));
 
 ---
@@ -18,15 +21,23 @@ const orderedPosts = posts.map(post=>({
   style="width:100%; height:500px;"
 ></div>
 
-<script define:vars={{orderedPosts}}>
+<script define:vars={{orderedPosts, BASE}}>
   // console.log("coords var ->",orderedPosts.coords);
   window.addEventListener("DOMContentLoaded", () => {
     const map = new maplibregl.Map({
       container: "map",
       // style: "https://demotiles.maplibre.org/style.json", // testing demo tile
       style: '../public/mapstyle.json',
-      center: [-100,48],
-      zoom: 2.5,
+
+      // -------------------- center on north america, roughly --------------------
+      // center: [-100,48],
+      // zoom: 2.5,
+      // --------------------
+
+      // -------------------- center on southbay --------------------
+      center: [-118.37000311225792,33.8519980151288],
+      zoom: 9.5,
+      // --------------------
     });
 
     const features = orderedPosts.map(c => ({
@@ -35,7 +46,7 @@ const orderedPosts = posts.map(post=>({
         "type": "Point",
         "coordinates": [c.coords[1], c.coords[0]]
         }, // this is changing from latlong to longlat
-      "properties": { "name": c.title },
+      "properties": { "name": c.title, "id":c.id},
     }));
     
     map.on("load",() => {
@@ -63,12 +74,32 @@ const orderedPosts = posts.map(post=>({
 
     });
 
-    map.on("click", "coffee-points", (e) => {
-      new maplibregl.Popup()
-        .setLngLat(e.features[0].geometry.coordinates)
-        .setHTML(`<strong>${title}</strong>`)
+
+    let popup = new maplibregl.Popup({
+      closeButton: true,
+      closeOnClick: true
+    });
+
+    map.on("mouseenter", "coffee-points", (e) => {
+      map.getCanvas().style.cursor = "pointer"; // change cursor
+      const feature = e.features[0]; // The clicked feature
+
+      // new maplibregl.Popup()
+      //   .setLngLat(feature.geometry.coordinates)
+      //   // .setHTML(`<strong>${feature.properties.name}</strong>`)
+      //   .setHTML(`<a href=${BASE}posts/${feature.properties.name}>${feature.properties.name}</a>`)
+      //   .addTo(map);
+
+      popup
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML(`<a href=${BASE}posts/${feature.properties.id}> ${feature.properties.name}</a>`)
         .addTo(map);
     });
+
+    // map.on("mouseleave", "coffee-points", () => {
+    //   map.getCanvas().style.cursor = ""; // reset cursor
+    //   popup.remove();
+    // });
 
   });
 </script>
