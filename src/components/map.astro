@@ -27,7 +27,7 @@ const orderedPosts = posts.map(post=>({
     const map = new maplibregl.Map({
       container: "map",
       // style: "https://demotiles.maplibre.org/style.json", // testing demo tile
-      style: '../public/mapstyle.json',
+      style: `${BASE}mapstyle.json`,
 
       // -------------------- center on north america, roughly --------------------
       // center: [-100,48],
