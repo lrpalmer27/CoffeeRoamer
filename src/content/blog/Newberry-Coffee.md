@@ -8,7 +8,7 @@ heroImage: '../../assets/NEWBERRY-COFFEE_03-07-2026_1.JPG'
 
 ParkingRanking: 4
 PastriesRanking: 2
-CoffeeRanking: 3
+CoffeeRanking: 2.5
 OverallRanking: 2.5
 ---
 
