@@ -40,7 +40,8 @@ const orderedPosts = posts.map(post=>({
       zoom: 9.5,
       // --------------------
     });
-
+    
+    map.addControl(new maplibregl.NavigationControl());
     const features = orderedPosts.map(c => ({
       "type": "Feature",
       "geometry": {
@@ -82,8 +83,6 @@ const orderedPosts = posts.map(post=>({
             'icon-allow-overlap': false
           }
       });
-
-      map.addControl(new maplibregl.NavigationControl());
 
     });
 

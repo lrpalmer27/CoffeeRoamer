@@ -52,6 +52,12 @@ main {
 	padding: 1em 1em;
 }
 
+actualmap{
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: var(--box-shadow)
+}
+
 maparea {
 	max-width: 90%;
 	/* max-width: 1000px; */
@@ -77,6 +83,7 @@ maparea {
 	text-align: center;
 	border-radius: 0.5em;
 }
+
 .featurecards{
 	display: grid;
 	grid-template-columns: auto;
@@ -86,8 +93,10 @@ maparea {
 .featurecards div{
 	border: 1px solid black;
 	padding: 10px;
+	margin: 0.1em 0;
 	text-align: left;
-	border-radius: 0.5em;
+	border-radius: 8px;
+	box-shadow: var(--box-shadow);
 }
 .stargrid {
 	display: grid;

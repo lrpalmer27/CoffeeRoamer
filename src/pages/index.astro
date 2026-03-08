@@ -19,38 +19,38 @@ import Map from "../components/map.astro";
         <body>
             <Header />
             <main>
-                <h2> Welcome Coffee Roamers! </h2>
+                <h2 style="margin: 0.5em 0 0.5em 0 "> Welcome Coffee Roamers! </h2>
+
+                <maparea>
+                    <div>
+                    </div>
+                    <div class="mapfilters">
+                        <!-- use this area to put in filter cards to filter the map -->
+                        <div> Location </div>
+                        <div> Rating </div>
+                        <div> Date </div>
+                        <div> Extra </div>
+                    </div>
+                    <div class=featurecards>
+                        <!-- use this area to dynamically replace featured cards
+                        showing a few local spots and highlighting them on the map-->
+                        <div> 
+                            <h4>Sweet Wheat Bakery</h4>
+                            <h5>Redondo Beach, CA | 02/28/2026</h5>
+                            <p> Short description</p>
+                        </div>
+                        <div>
+                            <h4>Sweet Wheat Bakery</h4>
+                            <h5>Redondo Beach, CA | 02/28/2026</h5>
+                            <p> Short description</p>
+                        </div>
+                    </div>
+                    <actualmap>
+                        <Map />
+                    </actualmap>
+
+                </maparea>
             </main>
-
-        <maparea>
-            <div>
-            </div>
-            <div class="mapfilters">
-                <!-- use this area to put in filter cards to filter the map -->
-                <div> Location </div>
-                <div> Rating </div>
-                <div> Date </div>
-                <div> Extra </div>
-            </div>
-            <div class=featurecards>
-                <!-- use this area to dynamically replace featured cards
-                 showing a few local spots and highlighting them on the map-->
-                <div> 
-                    <h4>Sweet Wheat Bakery</h4>
-                    <h5>Redondo Beach, CA | 02/28/2026</h5>
-                    <p> Short description</p>
-                </div>
-                <div>
-                    <h4>Sweet Wheat Bakery</h4>
-                    <h5>Redondo Beach, CA | 02/28/2026</h5>
-                    <p> Short description</p>
-                </div>
-            </div>
-            <div>
-                <Map />
-            </div>
-
-        </maparea>
         <Footer />
     </body>
 </html>
