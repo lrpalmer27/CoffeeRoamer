@@ -1,0 +1,47 @@
+---
+import {BASE} from '../consts.ts';
+
+---
+
+<template id="map-popup-template">
+  <div class="MapPopupClass">
+    <img class="her0image"> </img>
+    <div class="popupcontent">
+        <h3 class="Name"></h3>
+        <h5 class="addy"></h5>
+        <p class="descr"></p>
+    </div>
+
+    <!-- <h4 class="Name"> </h4> -->
+    <!-- <div class="popup-content"></div> -->
+  </div>
+
+</template>
+
+<style>
+    .MapPopupClass{
+        display: grid;
+        grid-template-columns: 40% auto;
+        /* gap 0.25rem;  */
+        grid-template-rows: auto;
+        align-items: center;
+        /* max-width: fit-content; */
+        width: auto;
+    }
+
+    .popupcontent{ 
+        justify-content: left;
+        margin: 0.5em 0.5em;
+        flex: auto;
+    }
+
+    .descr{
+        white-space: nowrap;
+    }
+
+    .her0image{ 
+        /* max-height: calc(max-content-10%); */
+    }
+
+
+</style>

@@ -8,10 +8,10 @@
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
 	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+	--gray: 80, 80, 80;
+	--gray-light: 150, 150, 150;
+	--gray-dark: 20, 20, 20;
+	--gray-gradient: rgba(var(--gray-light), 10%), #fff;
 	--box-shadow:
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%), 0 16px 32px
 		rgba(var(--gray), 33%);
@@ -94,9 +94,6 @@ maparea {
 	overflow-y: scroll;
 	scrollbar-width: none;
 	scroll-behavior:smooth;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;;
-	border-radius: 8px;
 }
 
 .featurecards div{
@@ -105,7 +102,6 @@ maparea {
 	margin: 0.1em 0;
 	text-align: left;
 	border-radius: 8px;
-	box-shadow: var(--box-shadow);
 }
 .stargrid {
 	display: grid;
@@ -135,7 +131,8 @@ h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.20 0;
+	padding: 0.2em 0;
+	margin: 0.20em 0;
 	line-height: 1.2;
 }
 h1 {
@@ -151,7 +148,7 @@ h4 {
 	font-size: 1em;
 }
 h5 {
-	font-size: 0.75em;
+	font-size: 1em;
 	font-style: italic;
 	color: rgb(var(--gray));
 }
@@ -169,8 +166,9 @@ a:hover {
 	color: var(--accent);
 }
 p {
-	font-size: 0.9em;
-	margin-bottom: 1em;
+	font-size: 1em;
+	padding: 0.05em 0;
+	margin: 0.20em 0;
 }
 .prose p {
 	margin-bottom: 2em;
