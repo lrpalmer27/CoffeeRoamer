@@ -7,13 +7,14 @@ coords: [33.82168233502909, -118.38511734145379]
 pubDate: '02/28/2026'
 heroImage: '../../assets/SweetWheatBakery_1_02-28-2026.webp'
 
-ParkingRanking: 4
-PastriesRanking: 4.5
+ParkingRanking: 5
+PastriesRanking: 5
 CoffeeRanking: 1
-OverallRanking: 2.375
+OverallRanking: 3
 ---
 
 Cool little French style bakery in Redondo. Huge selection of French pastries, breads, etc. Lots of parking available. 
 
 Coffee is ok. But it is brewed from an automatic machine with a touchscreen, a bit dissapointing.
 
+This was a recommendation from David D. Thanks for the recc, overall enjoyable experience.
