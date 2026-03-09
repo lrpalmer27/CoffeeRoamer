@@ -2,6 +2,7 @@
 title: 'End Of The Earth Coffee'
 description: 'Solid Artisan Coffee'
 location: The Central Exchange Building, 7 NE 6th St Suite 010, Oklahoma City, OK 73104
+city: Oklahoma City, OK
 coords: [35.474778531563196, -97.51162311827959]
 pubDate: '02/28/2026'
 heroImage: '../../assets/EOTE_Coffee.webp'

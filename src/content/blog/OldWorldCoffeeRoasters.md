@@ -2,6 +2,7 @@
 title: 'Old World Coffee Roasters - Midtown'
 description: 'Solid Artisan Coffee'
 location: 104 California Ave, Reno, NV 89509
+city: Reno, NV
 coords: [39.52018527261914, -119.81169536044939]
 pubDate: '02/28/2026'
 heroImage: '../../assets/OldWorldCoffeeRoasters_02-28-2026.jpg'

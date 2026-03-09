@@ -2,6 +2,7 @@
 title: 'The Battery Cafe'
 description: 'Quaint Newfoundland cafe nestled at the base of Signal Hill'
 location: 1 Duckworth St, St. John's, NL A1C 1E3, Canada
+city: St. John's, NL
 coords: [47.57166546249111, -52.69765003125815]
 pubDate: '02/28/2026'
 heroImage: '../../assets/BatteryCafe_02-28-2026.jpg'
