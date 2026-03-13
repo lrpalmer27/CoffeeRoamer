@@ -3,8 +3,17 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
 import "maplibre-gl/dist/maplibre-gl.css";
 import Map from "../components/map.astro";
+import {BASE} from '../consts';
+
+import { getCollection } from 'astro:content';
+import { format } from 'maplibre-gl';
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
 ---
 <!-- <Map client:only="react" /> -->
 
@@ -19,37 +28,55 @@ import Map from "../components/map.astro";
         <body>
             <Header />
             <main>
-                <h2 style="margin: 0.5em 0 0.5em 0 "> Welcome Coffee Roamers! </h2>
+                <h1 style="margin: 0.5em 0 0.5em 0 "> Welcome Coffee Roamers! </h1>
 
                 <maparea>
                     <div>
                     </div>
                     <div class="mapfilters">
                         <!-- use this area to put in filter cards to filter the map -->
+                        <div> Filters: </div>
                         <div> Location </div>
                         <div> Rating </div>
                         <div> Date </div>
                         <div> Extra </div>
                     </div>
-                    <div class=featurecards>
-                        <!-- use this area to dynamically replace featured cards
-                        showing a few local spots and highlighting them on the map-->
-                        <div> 
-                            <h4>Sweet Wheat Bakery</h4>
-                            <h6>Redondo Beach, CA | 02/28/2026</h6>
-                            <p> Short description</p>
-                        </div>
-                        <div>
-                            <h4>Sweet Wheat Bakery</h4>
-                            <h6>Redondo Beach, CA | 02/28/2026</h6>
-                            <p> Short description</p>
-                        </div>
-                        <div>
-                            <h4>Sweet Wheat Bakery</h4>
-                            <h6>Redondo Beach, CA | 02/28/2026</h6>
-                            <p> Short description</p>
-                        </div>
+                    <div class="featurecards">
+                        <ul>
+                            {
+                                posts.map((post)=> (
+                                    <div class="individual-featured-item">   
+                                        <a href={`${BASE}posts/${post.id}/`}>
+                                            <h2 class="Name">{post.data.title}</h2>
+                                            <h5 class="CityDate">{post.data.city}|<FormattedDate date={post.data.pubDate} format='short'/></h5>
+                                            <p class="descr">{post.data.description}</p>    
+                                            {/* <p> {post.data.heroImage.src} </p> */}
+                                            <img src=`${post.data.heroImage.src}` alt="image"/>
+                                        </a>
+                                    </div>
+                                ))
+                            }
+                        </ul>
                     </div>
+
+
+                    <!-- <div class='featurecards'>
+                        <div class="individual-featured-item"> 
+                            <h4>Sweet Wheat Bakery</h4>
+                            <h6>Redondo Beach, CA | 02/28/2026</h6>
+                            <p> Short description</p>
+                        </div>
+                        <div class="individual-featured-item"> 
+                            <h4>Sweet Wheat Bakery</h4>
+                            <h6>Redondo Beach, CA | 02/28/2026</h6>
+                            <p> Short description</p>
+                        </div>
+                        <div class="individual-featured-item"> 
+                            <h4>Sweet Wheat Bakery</h4>
+                            <h6>Redondo Beach, CA | 02/28/2026</h6>
+                            <p> Short description</p>
+                        </div>
+                    </div> -->
                     <actualmap>
                         <Map />
                     </actualmap>    
@@ -58,3 +85,62 @@ import Map from "../components/map.astro";
         <Footer />
     </body>
 </html>
+
+
+<style>
+    .featurecards{
+        display: grid;
+        grid-template-columns: auto;
+        text-align: left;
+        margin: 0 0;
+        padding: 0 0.2;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+        flex-wrap: wrap;
+        align-items: right;
+    }
+
+    .individual-featured-item{
+        border: 1px solid black;
+        padding: 10px;
+        margin: 0.25em 0;
+        text-align: left;
+        border-radius: 8px;
+        flex-wrap: wrap;
+    }
+
+    .popupcontent{ 
+        justify-content: left;
+        margin: 0.5em 0.5em;
+        flex: auto;
+    }
+
+    .Name{
+        /* white-space: nowrap; */
+        flex: auto;
+    }
+
+    .descr{ 
+        font-size: 0.75em;
+        padding: 0.05em 0;
+        margin: 0.20em 0;
+        flex-wrap: wrap;
+        flex: auto;
+    }
+
+    ul{ 
+        align-items: right;
+        margin: 0 0;
+        padding: 0 0;
+        flex: auto;
+    }
+
+    a {
+        text-decoration: none; /* Removes underline */
+        color: inherit;        /* Uses parent element color */
+    }
+
+
+
+</style>

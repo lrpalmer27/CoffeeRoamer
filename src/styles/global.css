@@ -26,7 +26,7 @@
 	font-display: swap;
 }
 @font-face {
-	font-family: "myFont";
+	font-family: "myFontBold";
 	/* src: url("fonts/atkinson-bold.woff") format("woff"); */
 	src: url('/CoffeeRoamer/fonts/SpecialElite-Regular.ttf') format('truetype');
 	font-weight: 700;
@@ -56,24 +56,26 @@ actualmap{
 	border-radius: 16px;
 	overflow: hidden;
 	box-shadow: var(--box-shadow);
+	flex-direction: column;
+	min-width: 300px;
 }
 
 maparea {
-	max-width: 90%;
-	/* max-width: 1000px; */
-	margin: auto;
-	padding: 1em 1em;
+	max-width: 95%;
+	padding: .5em .5em;
 	display: grid;
-	grid-template-columns: 20% auto;
-	grid-template-rows: 8% auto;
+	grid-template-columns: minmax(min-content, 25%) auto;
+	grid-template-rows: auto auto;
 }
 
 .mapfilters{
 	display : grid;
-	grid-template-columns: auto auto auto auto;
+	grid-auto-flow: column;
+	padding: 0.3em 0;
 	justify-content: start;
 	gap: 0.25rem;
 	grid-template-rows: auto;
+	overflow-x: hidden;
 }
 
 .mapfilters div{
@@ -86,8 +88,9 @@ maparea {
 
 .featurecards{
 	display: grid;
-	grid-template-columns: auto;
-	text-align: left;
+	grid-template-columns: minmax(100px, auto);
+	/* text-align: left; */
+	align-items: right;
 	margin: 0 0;
 	padding: 0 0;
 	max-height: 600px;
@@ -96,13 +99,6 @@ maparea {
 	scroll-behavior:smooth;
 }
 
-.featurecards div{
-	border: 1px solid black;
-	padding: 10px;
-	margin: 0.1em 0;
-	text-align: left;
-	border-radius: 8px;
-}
 .stargrid {
 	display: grid;
 	grid-template-columns: auto auto;
@@ -136,24 +132,24 @@ h6 {
 	line-height: 1.2;
 }
 h1 {
-	font-size: 2.25em;
+	font-size: 2.75em;
 }
 h2 {
-	font-size: 2em;
+	font-size: 1.5em;
 }
 h3 {
-	font-size: 1.5em;
+	font-size: 1em;
 }
 h4 {
 	font-size: 1em;
 }
 h5 {
-	font-size: 1em;
+	font-size: .75em;
 	font-style: italic;
 	color: rgb(var(--gray));
 }
 h6 {
-	font-size: 0.75em;
+	font-size: 0.5em;
 	font-style: italic;
 	color: rgb(var(--gray));
 }

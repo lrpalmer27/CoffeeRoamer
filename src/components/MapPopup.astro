@@ -7,8 +7,8 @@ import {BASE} from '../consts.ts';
   <div class="MapPopupClass">
     <img class="her0image"> </img>
     <div class="popupcontent">
-        <h3 class="Name"></h3>
-        <h5 class="city"></h5>
+        <h2 class="Name"></h2>
+        <h4 class="city"></h4>
         <p class="descr"></p>
     </div>
 
@@ -27,16 +27,24 @@ import {BASE} from '../consts.ts';
         align-items: center;
         /* max-width: fit-content; */
         width: auto;
+        color: inherit;
+        font-family: "myFont";
     }
 
     .popupcontent{ 
         justify-content: left;
         margin: 0.5em 0.5em;
         flex: auto;
+        color: inherit;
+        font: inherit;
+        font-family: "myFont";
     }
 
     .descr{
         white-space: nowrap;
+        color: inherit;
+        font: inherit;
+        font-family: "myFont";
     }
 
     .her0image{ 
