@@ -4,52 +4,50 @@ import {BASE} from '../consts.ts';
 ---
 
 <template id="map-popup-template">
-  <div class="MapPopupClass">
-    <img class="her0image"> </img>
-    <div class="popupcontent">
-        <h2 class="Name"></h2>
-        <h4 class="city"></h4>
-        <p class="descr"></p>
+    <a class="url" href={`${BASE}posts/`}>
+    <div class="MapPopupClass">
+        <img class="her0image"> </img>
+        <div class="popupcontent">
+            <h2 class="Name"></h2>
+            <h4 class="city"></h4>
+            <p class="descr"></p>
+        </div>
     </div>
-
-    <!-- <h4 class="Name"> </h4> -->
-    <!-- <div class="popup-content"></div> -->
-  </div>
-
+    </a>
 </template>
 
 <style>
     .MapPopupClass{
         display: grid;
-        grid-template-columns: 40% auto;
-        /* gap 0.25rem;  */
-        grid-template-rows: auto;
+        grid-template-columns: 10em min-content;
+        gap: 0.25em; 
         align-items: center;
-        /* max-width: fit-content; */
-        width: auto;
-        color: inherit;
         font-family: "myFont";
+    }
+
+    .her0image{ 
+        object-fit: contain;
     }
 
     .popupcontent{ 
         justify-content: left;
         margin: 0.5em 0.5em;
         flex: auto;
-        color: inherit;
-        font: inherit;
         font-family: "myFont";
     }
 
     .descr{
         white-space: nowrap;
-        color: inherit;
-        font: inherit;
         font-family: "myFont";
     }
 
-    .her0image{ 
-        /* max-height: calc(max-content-10%); */
+    .url{
+        text-decoration: none; /* Removes underline */
+        color: inherit;        /* Uses parent element color */
     }
 
+    .url:hover .popupcontent .name {
+        color: var(--accent);
+    }
 
 </style>

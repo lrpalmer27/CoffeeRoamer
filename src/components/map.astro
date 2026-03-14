@@ -5,7 +5,9 @@ import {BASE} from '../consts.ts';
 import MapPopupTemplate from '../components/MapPopup.astro';
 
 import { getCollection } from 'astro:content';
-const posts = await getCollection('blog');
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 const orderedPosts = posts.map(post=>({
   id: post.id,
   coords: post.data.coords,
@@ -51,7 +53,9 @@ const orderedPosts = posts.map(post=>({
         "coordinates": [c.coords[1], c.coords[0]]
         }, // this is changing from latlong to longlat
       "properties": { "name": c.title, "id":c.id, "heroimgsrc": c.her00image.src,
-                      'city':c.city, 'description':c.description},
+                      'city':c.city, 'description':c.description,
+                      'url':`${BASE}posts/${c.id}/`
+                    },
     }));
     
     map.on("load",() => {
@@ -83,20 +87,16 @@ const orderedPosts = posts.map(post=>({
           'layout':{
             'icon-image':'locationIcon',
             'icon-size': 1,
-            'icon-allow-overlap': false
+            'icon-allow-overlap': true
           }
       });
 
     });
 
-
-    let popupOffsets = { 
-      right: [-1,1]
-    };
-
     let popup = new maplibregl.Popup({
       closeButton: true,
       closeOnClick: true,
+      maxWidth: '40%',
       anchor:'left',
     });
 
@@ -112,6 +112,7 @@ const orderedPosts = posts.map(post=>({
       mappopupnode.querySelector(".her0image").src = feature.properties.heroimgsrc;
       mappopupnode.querySelector(".city").textContent = feature.properties.city;
       mappopupnode.querySelector(".descr").textContent = feature.properties.description;
+      mappopupnode.querySelector(".url").href = feature.properties.url;
 
       // -----------------
 
