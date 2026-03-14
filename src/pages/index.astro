@@ -35,7 +35,7 @@ const posts = (await getCollection('blog')).sort(
                     </div>
                     <div class="mapfilters">
                         <!-- use this area to put in filter cards to filter the map -->
-                        <div> Filters: </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M15 19.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0L9.29 16.7a.99.99 0 0 1-.29-.83v-5.12L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L15 10.75zM7.04 5L11 10.06v5.52l2 2v-7.53L16.96 5z"/></svg>
                         <div> Location </div>
                         <div> Rating </div>
                         <div> Date </div>
@@ -50,7 +50,8 @@ const posts = (await getCollection('blog')).sort(
                                             <h2 class="Name">{post.data.title}</h2>
                                             <div class="CityDateBox">
                                                 <h5 class="c">{post.data.city}</h5>
-                                                <h5 class="c" style="text-align:right"><FormattedDate date={post.data.pubDate} format='short'/></h5>
+                                                <h5 class="c">-</h5>
+                                                <h5 class="c" style="text-align:left"><FormattedDate date={post.data.pubDate} format='short'/></h5>
                                             </div>
                                             <p class="descr">{post.data.description}</p>    
                                             {/* <p> {post.data.heroImage.src} </p> */}
@@ -92,16 +93,15 @@ const posts = (await getCollection('blog')).sort(
         text-align: left;
         border-radius: 8px;
         flex-wrap: wrap;
-        box-shadow: 
-        	0 2px 4px rgba(var(--gray), 25%), 0 6px 12px rgba(var(--gray), 33%), 0 12px 20px
-		    rgba(var(--gray), 33%);
     }
 
     .CityDateBox{ 
         display: grid;
-        grid-template-columns: min-content min-content;
+        /* grid-template-columns: min-content min-content; */
+        grid-auto-flow: column;
+        grid-auto-columns: min-content;
         text-align: left;
-        column-gap: 2em;
+        column-gap: .25em;
         margin: 0 0;
         padding: 0 0em;
 
@@ -115,6 +115,9 @@ const posts = (await getCollection('blog')).sort(
     .c{
         text-wrap-mode: nowrap;
         font-family: "myFont";
+        margin: 0 0;
+        padding: 0 0;
+        color: var(--gray-light);
     }
 
     .popupcontent{ 
@@ -127,6 +130,12 @@ const posts = (await getCollection('blog')).sort(
     .featurecards a:hover .descr,
     .featurecards a:hover .c{ 
         color: var(--accent);
+    }
+
+    .individual-featured-item:hover {
+        box-shadow: 
+        0 2px 4px rgba(var(--shadow), 25%), 0 6px 12px rgba(var(--shadow), 33%), 0 12px 20px
+        rgba(var(--shadow), 33%);
     }
 
     .Name{

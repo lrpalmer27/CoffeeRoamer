@@ -10,9 +10,9 @@
 	--black: #0f1219;
 	--gray: #3c3c55;
 	--shadow: 60,60,85;
-	--gray-light: #969696;
+	--shadow-gray-light: 150,150,150;
 	--gray-dark: #3c3c54;
-	--gray-gradient: rgba(var(--gray-light), 10%), #fff;
+	--gray-gradient: rgba(var(--shadow-gray-light), 10%), #fff;
 	--box-shadow:
 		0 2px 6px rgba(var(--shadow), 25%), 0 8px 24px rgba(var(--shadow), 33%), 0 16px 32px
 		rgba(var(--shadow), 33%);
@@ -76,7 +76,10 @@ maparea {
 	justify-content: start;
 	gap: 0.25rem;
 	grid-template-rows: auto;
-	overflow-x: hidden;
+	overflow-x: scroll;
+	scrollbar-width: none;
+	scroll-behavior:smooth;
+	align-items: center;
 }
 
 .mapfilters div{
