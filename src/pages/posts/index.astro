@@ -56,16 +56,23 @@ const posts = (await getCollection('blog')).sort(
 			}
 			.title {
 				margin: 0;
-				color: rgb(var(--black));
+				color: var(--black);
 				line-height: 1;
 			}
 			.date {
 				margin: 0;
-				color: rgb(var(--gray));
+				color: var(--gray);
 			}
+
+			.location{
+				margin: 0 0;
+				color: var(--gray);
+			}
+
 			ul li a:hover h4,
+			ul li a:hover .location,
 			ul li a:hover .date {
-				color: rgb(var(--accent));
+				color: var(--accent);
 			}
 			ul a:hover img {
 				box-shadow: var(--box-shadow);
@@ -100,7 +107,7 @@ const posts = (await getCollection('blog')).sort(
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
 									<h4 class="title">{post.data.title}</h4>
-									<h5 style="margin: 0 0;"> {post.data.location}</h5>
+									<h5 class="location"> {post.data.location}</h5>
 									<p class="date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>

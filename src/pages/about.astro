@@ -3,10 +3,32 @@ import coffeewheel from '../assets/CoffeeWheel_SteelOakCoffee.png';
 import Layout from '../layouts/AboutMe.astro';
 ---
 
+title: 'Cafe Social'
+description: 'American Style Costa Rican Cafe'
+location: Calle Carmen, Santa Teresa, Puntarenas Province, Manzanillo, Costa Rica
+city: Santa Teresa, CR
+coords: [9.651063285882863, -85.17565944687533]
+pubDate: '02/28/2026'
+heroImage: '../../assets/CafeSocial_CR.jpg'
+
+ParkingRanking: 1.5
+PastriesRanking: 3
+CoffeeRanking: 4.75
+OverallRanking: 4
+
 <Layout
 	title="About Me"
 	pubDate={new Date('August 08 2021')}
+	coords:[0,0]
+	description='none'
+	location='Summerside, PE'
+	city='Summerside, PE'
 	heroImage={coffeewheel}
+
+	ParkingRanking:1.5
+	PastriesRanking:3.0
+	CoffeeRanking:4.75
+	OverallRanking:4.2
 >
 	<p>
 		This page will eventually turn into something like this: https://steeloakcoffee.com/pages/coffee-flavor-wheel
