@@ -1,0 +1,72 @@
+---
+import {BASE} from '../consts.ts';
+
+---
+
+
+<div id="popupfiltermenu" >
+    <h4>Add Filters</h4> 
+    <div id="clickbuttons">
+        <div id="CBLHS">
+            <button id="VisOnMap" class="buttons">
+                <h5 style="font-style: normal"> Visible on Map </h5>
+            </button>
+            <button id="Rating" class="buttons">
+                <h5 style="font-style: normal"> Rating </h5>
+            </button>
+        </div>
+        <div id="CBRHS">
+            <button id="Date" class="buttons">
+                <h5 style="font-style: normal"> Date Visited </h5>
+            </button>
+            <button id="plcholder" class="buttons">
+                <h5 style="font-style: normal;"> Future </h5>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    #popupfiltermenu{
+        position: fixed;
+        top: 40%;
+        left: 55%;
+        transform: translate(-50%, -50%);
+        padding: 0em 0.5em .5em 0.5em; 
+        background: linear-gradient(rgb(var(--shadow-gray-light)) -95%,#ffffff 100%) no-repeat;
+        border-radius: 1em;
+        border: 1.5px solid black;
+        z-index: 1000; 
+        display: none;  
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #popupfiltermenu.visible {
+    display: flex; 
+    }   
+
+    #clickbuttons{ 
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1em;
+        width: 100%;
+    }
+
+    .buttons{
+        align-items: center;
+    }
+
+    #CBLHS,
+    #CBRHS { 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+    }
+
+</style>

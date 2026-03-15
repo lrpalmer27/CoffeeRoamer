@@ -103,6 +103,28 @@ maparea {
 	scroll-behavior:smooth;
 }
 
+.buttons{
+	display: flex;
+	border-width: 0;
+	border-radius: .5em;
+	align-items: center;
+	font-family: inherit;
+	font-size: inherit;
+	background-color: inherit;
+}
+
+.buttons:hover{
+	box-shadow: 
+	0 0 4px rgba(var(--shadow), 25%), 0 0 8px rgba(var(--shadow), 33%), 0 0 15px
+	rgba(var(--shadow), 33%);
+}
+
+.buttons:active {
+	box-shadow: none;
+}
+
+
+
 .stargrid {
 	display: grid;
 	grid-template-columns: auto auto;

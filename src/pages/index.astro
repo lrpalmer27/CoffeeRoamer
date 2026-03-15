@@ -7,7 +7,8 @@ import FormattedDate from '../components/FormattedDate.astro';
 import "maplibre-gl/dist/maplibre-gl.css";
 import Map from "../components/map.astro";
 import {BASE} from '../consts';
-import { format } from 'maplibre-gl';
+// import { format } from 'maplibre-gl';
+import Filterpopup from '../components/filterpopup.astro';
 
 import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
@@ -16,7 +17,6 @@ const posts = (await getCollection('blog')).sort(
 
 ---
 <!-- <Map client:only="react" /> -->
-
 
 <!doctype html>
 <html lang="en">
@@ -27,16 +27,19 @@ const posts = (await getCollection('blog')).sort(
 	</head>
         <body>
             <Header />
+            <Filterpopup/>
             <main>
                 <h1 style="margin: 0.5em 0 0.5em 0 "> Welcome Coffee Roamers! </h1>
 
                 <maparea>
-                    <div>
-                    </div>
+                    <button id="filtr" class="buttons">
+                        <h5 style="font-style: normal"> Filter </h5>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"><path fill="var(--gray)" d="M15 19.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0L9.29 16.7a.99.99 0 0 1-.29-.83v-5.12L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L15 10.75zM7.04 5L11 10.06v5.52l2 2v-7.53L16.96 5z"/></svg>
+                    </button>
+                    <script> import './post_filtering' </script>
                     <div class="mapfilters">
                         <!-- use this area to put in filter cards to filter the map -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M15 19.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0L9.29 16.7a.99.99 0 0 1-.29-.83v-5.12L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L15 10.75zM7.04 5L11 10.06v5.52l2 2v-7.53L16.96 5z"/></svg>
-                        <div> Location </div>
+                        <div> Visible on Map </div>
                         <div> Rating </div>
                         <div> Date </div>
                         <div> Extra </div>
@@ -55,7 +58,7 @@ const posts = (await getCollection('blog')).sort(
                                             </div>
                                             <p class="descr">{post.data.description}</p>    
                                             {/* <p> {post.data.heroImage.src} </p> */}
-                                            <img src=`${post.data.heroImage.src}` alt="image"/>
+                                            <img src={post?.data?.heroImage?.src} alt="image"/>
                                         </a>
                                     </div>
                                 ))
@@ -73,6 +76,21 @@ const posts = (await getCollection('blog')).sort(
 
 
 <style>
+    #filtr{
+        display: flex;
+        justify-content: flex-end;
+        background-color: inherit;
+        border-width: 0;
+        border-radius: .5em;
+        padding: 0 0.2em;
+        margin: auto 0.3em auto auto;
+        width: min-content;
+        height: 60%;
+        align-items: center;
+        font-family: inherit;
+        font-size: inherit;
+    }
+
     .featurecards{
         display: grid;
         grid-template-columns: auto;
