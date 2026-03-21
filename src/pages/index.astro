@@ -67,9 +67,9 @@ const posts = (await getCollection('blog')).sort(
                             }
                         </ul>
                     </div>
-                    <actualmap>
+                    <div id='actualmap'>
                         <Map />
-                    </actualmap>    
+                    </div>    
                 </maparea>
             </main>
         <Footer />
@@ -93,17 +93,23 @@ const posts = (await getCollection('blog')).sort(
         font-size: inherit;
     }
 
+    #actualmap{
+        display: flex;
+        
+    }
+
     .featurecards{
         display: grid;
-        grid-template-columns: auto;
-        text-align: left;
-        margin: 0 0;
-        padding: 0 0.2;
-        overflow-y: scroll;
-        scrollbar-width: none;
-        scroll-behavior: smooth;
-        flex-wrap: wrap;
+        grid-template-columns: minmax(20vw, auto);
+        /* text-align: left; */
         align-items: right;
+        margin: 0 0;
+        padding: 0 0.5em;
+        max-height: 700px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        scroll-behavior:smooth;
     }
 
     .individual-featured-item{
@@ -154,7 +160,7 @@ const posts = (await getCollection('blog')).sort(
 
     .individual-featured-item:hover {
         box-shadow: 
-        0 2px 4px rgba(var(--shadow), 25%), 0 6px 12px rgba(var(--shadow), 33%), 0 12px 20px
+        0 0px 4px rgba(var(--shadow), 25%), 0 0px 12px rgba(var(--shadow), 33%), 0 0px 20px
         rgba(var(--shadow), 33%);
     }
 

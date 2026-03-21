@@ -62,7 +62,7 @@ actualmap{
 }
 
 maparea {
-	max-width: 95%;
+	max-width: 95vw;
 	padding: .5em .5em;
 	display: grid;
 	grid-template-columns: minmax(min-content, 25%) auto;
@@ -90,18 +90,6 @@ maparea {
 	border-radius: 0.5em;
 }
 
-.featurecards{
-	display: grid;
-	grid-template-columns: minmax(100px, auto);
-	/* text-align: left; */
-	align-items: right;
-	margin: 0 0;
-	padding: 0 0.5em;
-	max-height: 600px;
-	overflow-y: scroll;
-	scrollbar-width: none;
-	scroll-behavior:smooth;
-}
 
 .buttons{
 	display: flex;
@@ -122,8 +110,6 @@ maparea {
 .buttons:active {
 	box-shadow: none;
 }
-
-
 
 .stargrid {
 	display: grid;

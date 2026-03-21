@@ -89,18 +89,23 @@ import Layout from '../layouts/AboutMe.astro';
 	}
 
 	#container {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
       width: 90%;
       height: 90%;
       margin: auto;
-      padding: 0;
+      padding: auto;
 	  background-color: inherit;
     }
 
 	.coffee-wheel-element{
 		display: flex;
-		flex-wrap: wrap;
-		width: 100%;
-		height: 960px;
+		justify-content: center;
+		flex-wrap: flex;
+		width: 90vw;
+		height: 90vh;
+		aspect-ratio: 1:1;
 		max-width: 960px;
 		border: 1px solid;
 		border-color: var(--black);
@@ -112,4 +117,5 @@ import Layout from '../layouts/AboutMe.astro';
 	.h3{ 
 		text-align: center;
 	}
+	
 </style>
