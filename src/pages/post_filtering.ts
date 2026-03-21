@@ -32,8 +32,11 @@ if (typeof document !== "undefined") {
 
         switch (button.id) {
             case 'VisOnMap':
-                
+                const posts = (window as any).posts;
                 // alert(`Visible on map filter wip -> ${ids}`);
+                console.dir('checking if posts is accessible')
+                console.dir(posts)
+                // this works. now need to do some filtering with it.
                 break;
 
             case 'Rating':
@@ -49,4 +52,8 @@ if (typeof document !== "undefined") {
                 break;
         }
     });
+}
+
+export function updateFeaturedCardsList(){
+
 }

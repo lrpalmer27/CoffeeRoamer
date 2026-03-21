@@ -18,6 +18,7 @@ const posts = (await getCollection('blog')).sort(
 ></div>
 
 <script type="module" define:vars={{posts, BASE}}>
+  window.posts = posts;
   // console.log("coords var ->",orderedPosts.coords);
   window.addEventListener("DOMContentLoaded", () => {
       const map = new maplibregl.Map({
@@ -131,8 +132,17 @@ const posts = (await getCollection('blog')).sort(
         layers:['coffee-points']
       });
     const idss = visiblefeatures.map(f=>f.properties.id);
-    console.dir(idss)
-    }); 
+
+    visiblefeatures.forEach(visibleE =>{
+      const ele = posts.find(
+        post => post.id === visibleE.properties.id
+      );
+
+      if (ele){
+          ele.data.mapvis = true;
+      }
+    });
+  });
 
   });
 
