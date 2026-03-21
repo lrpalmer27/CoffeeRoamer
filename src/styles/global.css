@@ -119,12 +119,6 @@ maparea {
 
 }
 
-.blogsplitscreen{
-	display: grid;
-	grid-template-columns: auto 30%;
-	align-items: top;
-}
-
 h1,
 h2,
 h3,

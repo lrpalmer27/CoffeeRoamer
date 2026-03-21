@@ -83,7 +83,8 @@ const { title, description, location, pubDate, updatedDate, heroImage,
 					</div>
 
 					<div class="blogsplitscreen">
-						<div> <slot /> </div>
+						<!-- this is where the md file gets put in -->
+						<div> <slot /> </div> 
 
 						<div>
 							<h3 style="text-align: center; margin: 0 0 0.5rem 0;" > Ranking </h3>
@@ -109,3 +110,14 @@ const { title, description, location, pubDate, updatedDate, heroImage,
 		<Footer />
 	</body>
 </html>
+
+<style>
+	
+.blogsplitscreen{
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	align-items: top;
+	justify-content: center;
+}
+
+</style>
