@@ -8,6 +8,8 @@ Dev URL: https://lrpalmer27.github.io/CoffeeRoamer/
 - only showing featured posts that are visible on the map viewing window
 - hover on either featured post, or tag on map, the corresponding other one gets shadow box applied to show they are related.
 
+** more issues are tracked in the issues as they come up **
+
 # wishlist features
 - Location tags to show posts on map
 - Filtering map by location/rating/date etc 
