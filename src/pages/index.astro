@@ -50,7 +50,7 @@ const posts = (await getCollection('blog')).sort(
                         <ul>
                             {
                                 posts.map((post)=> (
-                                    <div class="individual-featured-item">   
+                                    <div id=`${post.id}` class="individual-featured-item">   
                                         <a href={`${BASE}posts/${post.id}/`}>
                                             <h2 class="Name">{post.data.title}</h2>
                                             <div class="CityDateBox">
@@ -152,13 +152,23 @@ const posts = (await getCollection('blog')).sort(
         flex: auto;
     }
 
-    .featurecards a:hover .Name,
-    .featurecards a:hover .descr,
-    .featurecards a:hover .c{ 
+    .highlighted{
         color: var(--accent);
+        box-shadow: 
+        0 0px 4px rgba(var(--shadow), 25%), 0 0px 12px rgba(var(--shadow), 33%), 0 0px 20px
+        rgba(var(--shadow), 33%);
     }
 
+
+
+    // .featurecards a:hover .Name,
+    // .featurecards a:hover .descr,
+    // .featurecards a:hover .c{ 
+    //     color: var(--accent);
+    // }
+
     .individual-featured-item:hover {
+        color: var(--accent);
         box-shadow: 
         0 0px 4px rgba(var(--shadow), 25%), 0 0px 12px rgba(var(--shadow), 33%), 0 0px 20px
         rgba(var(--shadow), 33%);

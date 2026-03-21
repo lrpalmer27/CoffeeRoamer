@@ -94,6 +94,7 @@ const posts = (await getCollection('blog')).sort(
       anchor:'left',
     });
 
+    let hoveredID = null;
     map.on("mouseenter", "coffee-points", (e) => {
       map.getCanvas().style.cursor = "pointer"; // change cursor
       const feature = e.features[0]; // The clicked feature
@@ -107,6 +108,12 @@ const posts = (await getCollection('blog')).sort(
       mappopupnode.querySelector(".city").textContent = feature.properties.city;
       mappopupnode.querySelector(".descr").textContent = feature.properties.description;
       mappopupnode.querySelector(".url").href = feature.properties.url;
+
+      // make corresponding feature card highlighted
+      hoveredID = feature.properties.id;
+      const current = document.getElementById(hoveredID);
+      current.classList?.add('highlighted')
+
 
       // -----------------
 
@@ -124,6 +131,8 @@ const posts = (await getCollection('blog')).sort(
 
       map.on("mouseleave", "coffee-points", () => {
       map.getCanvas().style.cursor = ""; // reset cursor
+      const current = document.getElementById(hoveredID);
+      current.classList?.remove('highlighted')
       // popup.remove();
     });
 
