@@ -19,10 +19,10 @@ Single origin beans come in a branded cardboard box - neat changeup on presentat
 
 | | |
 | --------- | -------- |
-| ![blog placeholder](../../assets/TheBoyTheBear2.jpg) | ![blog placeholder](../../assets/TheBoyTheBear3.jpg) |' |
+| ![blog placeholder](../../assets/TheBoyTheBear2.JPG) | ![blog placeholder](../../assets/TheBoyTheBear3.JPG) |' |
 
 Cool coffee bar area, friendly staff, lots of people around. The coffee roaster is also behind the bar area - cool to see.
 
-![blog placeholder](../../assets/TheBoyTheBear4.jpg)
+![blog placeholder](../../assets/TheBoyTheBear4.JPG)
 
 Overall very enjoyable experience. 
