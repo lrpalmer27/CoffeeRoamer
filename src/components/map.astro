@@ -9,14 +9,6 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-const orderedPosts = posts.map(post=>({
-  id: post.id,
-  coords: post.data.coords,
-  title: post.data.title,
-  description: post.data.description,
-  her00image: post.data.heroImage,
-  city: post.data.city,
-}));
 
 ---
 <MapPopupTemplate />
@@ -25,7 +17,7 @@ const orderedPosts = posts.map(post=>({
   style="width:100%; height:100%;"
 ></div>
 
-<script type="module" define:vars={{orderedPosts, BASE}}>
+<script type="module" define:vars={{posts, BASE}}>
   // console.log("coords var ->",orderedPosts.coords);
   window.addEventListener("DOMContentLoaded", () => {
       const map = new maplibregl.Map({
@@ -47,18 +39,18 @@ const orderedPosts = posts.map(post=>({
     
     map.addControl(new maplibregl.NavigationControl());
     
-    const features = orderedPosts.map(c => ({
+    const features = posts.map(c => ({
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [c.coords[1], c.coords[0]]
+        "coordinates": [c.data.coords[1], c.data.coords[0]]
         }, // this is changing from latlong to longlat
-      "properties": { "name": c.title, "id":c.id, "heroimgsrc": c.her00image.src,
-                      'city':c.city, 'description':c.description,
+      "properties": { "name": c.data.title, "id":c.id, "heroimgsrc": c.data.heroImage.src,
+                      'city':c.data.city, 'description':c.data.description,
                       'url':`${BASE}posts/${c.id}/`
                     },
     }));
-    
+
     map.on("load",() => {
       map.addSource('CoffeeCoordinates',{
         type: 'geojson',
@@ -68,6 +60,7 @@ const orderedPosts = posts.map(post=>({
           }
       });
 
+      // this is the red icon symbol as svg
       const svg1 = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                     <path fill="#ae3c3c" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
                     </svg>`;
