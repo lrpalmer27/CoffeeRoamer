@@ -29,7 +29,7 @@ const posts = (await getCollection('blog')).sort(
             <Header />
             <!-- <Filterpopup/> -->
             <main>
-                <h1 style="margin: 0.5em 0 0.5em 0 "> Welcome Coffee Roamers! </h1>
+                <h1 style="margin: 1vh 0; padding: 0 0;"> Welcome Coffee Roamers! </h1>
 
                 <maparea>
                     <button id="filtr" class="buttons">
@@ -83,7 +83,7 @@ const posts = (await getCollection('blog')).sort(
         justify-content: flex-end;
         background-color: inherit;
         border-width: 0;
-        border-radius: .5em;
+        border-radius: 8px;
         padding: 0 0.2em;
         margin: auto 0.3em auto auto;
         width: min-content;
@@ -95,6 +95,11 @@ const posts = (await getCollection('blog')).sort(
 
     #actualmap{
         display: flex;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--box-shadow);
+        flex-direction: column;
+        min-width: 300px;
         
     }
 
@@ -159,13 +164,6 @@ const posts = (await getCollection('blog')).sort(
         rgba(var(--shadow), 33%);
     }
 
-
-
-    // .featurecards a:hover .Name,
-    // .featurecards a:hover .descr,
-    // .featurecards a:hover .c{ 
-    //     color: var(--accent);
-    // }
 
     .individual-featured-item:hover {
         color: var(--accent);
