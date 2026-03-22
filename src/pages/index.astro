@@ -14,7 +14,6 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
 ---
 <!-- <Map client:only="react" /> -->
 
@@ -41,16 +40,16 @@ const posts = (await getCollection('blog')).sort(
                     <Filterpopup/>  
                     <div class="mapfilters">
                         <!-- use this area to put in filter cards to filter the map -->
-                        <div> Visible on Map </div> 
-                        <!-- <div> Rating </div>-->
+                        <div> sample </div> 
+                        <!-- <div> visible on map </div>-->
                         <!-- <div> Date </div>-->
                         <!-- <div> Extra </div>-->
                     </div>
-                    <div class="featurecards">
+                    <div id="featurecards">
                         <ul>
                             {
                                 posts.map((post)=> (
-                                    <div id=`${post.id}` class="individual-featured-item">   
+                                    <li id=`${post.id}` class="individual-featured-item">   
                                         <a href={`${BASE}posts/${post.id}/`}>
                                             <h2 class="Name">{post.data.title}</h2>
                                             <div class="CityDateBox">
@@ -62,7 +61,7 @@ const posts = (await getCollection('blog')).sort(
                                             {/* <p> {post.data.heroImage.src} </p> */}
                                             <img src={post?.data?.heroImage?.src} alt="image"/>
                                         </a>
-                                    </div>
+                                    </li>
                                 ))
                             }
                         </ul>
@@ -125,7 +124,7 @@ const posts = (await getCollection('blog')).sort(
         
     }
 
-    .featurecards{
+    #featurecards{
         display: grid;
         grid-template-columns: minmax(20vw, auto);
         /* text-align: left; */
@@ -133,6 +132,7 @@ const posts = (await getCollection('blog')).sort(
         margin: 0 0;
         padding: 0 0.5em;
         max-height: 700px;
+        height: 70vh;
         overflow-y: scroll;
         overflow-x: hidden;
         scrollbar-width: none;

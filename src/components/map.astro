@@ -9,7 +9,6 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
 ---
 <MapPopupTemplate />
 
@@ -137,20 +136,22 @@ const posts = (await getCollection('blog')).sort(
     });
 
   map.on('idle',() => {
-      const visiblefeatures = map.queryRenderedFeatures({
-        layers:['coffee-points']
-      });
-    const idss = visiblefeatures.map(f=>f.properties.id);
-
-    visiblefeatures.forEach(visibleE =>{
-      const ele = posts.find(
-        post => post.id === visibleE.properties.id
-      );
-
-      if (ele){
-          ele.data.mapvis = true;
-      }
+    const visiblefeatures = map.queryRenderedFeatures({
+      layers:['coffee-points']
     });
+    const idss = visiblefeatures.map(f=>f.properties.id);
+    console.dir(idss)
+
+    posts.forEach(post => {
+      if (idss.includes(post.id)) {
+          post.data.mapvis = true;
+      } else {
+          post.data.mapvis = false;
+      }
+      });
+
+    console.dir(idss.length);
+    window.updateFeaturedCardsList();
   });
 
   });
