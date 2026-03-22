@@ -9,9 +9,4 @@ export default defineConfig({
     site: 'https://lrpalmer27.github.io',
     base: BASE,
     integrations: [sitemap()],
-    vite:{
-        optimizeDeps:{
-            include:['astro'],
-        },
-    },
 });
