@@ -99,9 +99,11 @@ if (typeof document !== "undefined") {
 
 // this loads the featured card list when the page loads
 // and after applying filters
-document.addEventListener("DOMContentLoaded", function() {
-    updateFeaturedCardsList();
-});
+if (typeof document !== "undefined") {
+    document.addEventListener("DOMContentLoaded", function() {
+        updateFeaturedCardsList();
+    });
+}
 
 // function to filter featured posts
 export function updateFeaturedCardsList(){
