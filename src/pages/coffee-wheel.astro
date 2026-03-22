@@ -34,44 +34,46 @@ import Layout from '../layouts/AboutMe.astro';
 					<script is:inline src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
 					<script is:inline src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
 					<script is:inline>
-						window.addEventListener("load", function () {
-						// The data used in this sample can be obtained from the CDN
-						// https://cdn.anychart.com/samples/sunburst-charts/coffee-flavour-wheel/data.json
-						anychart.data.loadJsonFile(
-						'https://cdn.anychart.com/samples/sunburst-charts/coffee-flavour-wheel/data.json',
-						function (data) {
-						// makes tree from the data for the sample
-						var dataTree = anychart.data.tree(data, 'as-table');
+						if (typeof window !== 'undefined'){
+							window.addEventListener("load", function () {
+							// The data used in this sample can be obtained from the CDN
+							// https://cdn.anychart.com/samples/sunburst-charts/coffee-flavour-wheel/data.json
+							anychart.data.loadJsonFile(
+							'https://cdn.anychart.com/samples/sunburst-charts/coffee-flavour-wheel/data.json',
+							function (data) {
+							// makes tree from the data for the sample
+							var dataTree = anychart.data.tree(data, 'as-table');
 
-						// create sunburst chart
-						var chart = anychart.sunburst(dataTree);
+							// create sunburst chart
+							var chart = anychart.sunburst(dataTree);
 
-						// set calculation mode
-						chart.calculationMode('ordinal-from-root');
+							// set calculation mode
+							chart.calculationMode('ordinal-from-root');
 
-						// set settings for the penultimate level labels
-						chart.level(-2).labels().position('radial');
+							// set settings for the penultimate level labels
+							chart.level(-2).labels().position('radial');
 
-						// set chart labels settings
-						chart.labels().hAlign('center');
+							// set chart labels settings
+							chart.labels().hAlign('center');
 
-						// set settings for leaves labels
-						chart.leaves().labels().minFontSize(8).textOverflow('...');
+							// set settings for leaves labels
+							chart.leaves().labels().minFontSize(8).textOverflow('...');
 
-						// the fill specified in the data has priority
-						// set point fill
-						chart.fill(function () {
-							return anychart.color.darken(this.parentColor, .15);
-						});
+							// the fill specified in the data has priority
+							// set point fill
+							chart.fill(function () {
+								return anychart.color.darken(this.parentColor, .15);
+							});
 
-						// set container id for the chart
-						chart.container('container');
+							// set container id for the chart
+							chart.container('container');
 
-						// initiate chart drawing
-						chart.draw();
-						}
-					);
-					});</script>
+							// initiate chart drawing
+							chart.draw();
+							}
+						);
+						});}
+					</script>
 			</div>
 		</main>
 	</body>
