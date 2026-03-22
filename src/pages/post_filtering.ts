@@ -152,7 +152,8 @@ export function updateFeaturedCardsList(){
         }); 
          
     };
-};
-
 // Make fcns global
 (window as any).updateFeaturedCardsList = updateFeaturedCardsList;
+};
+
+
