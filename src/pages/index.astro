@@ -38,12 +38,12 @@ const posts = (await getCollection('blog')).sort(
                     <script> import './post_filtering' </script>
                     <! -- 'this is the popup element' -->
                     <Filterpopup/>  
-                    <div class="mapfilters">
+                    <div id="mapfilters">
                         <!-- use this area to put in filter cards to filter the map -->
-                        <div> sample </div> 
-                        <!-- <div> visible on map </div>-->
-                        <!-- <div> Date </div>-->
-                        <!-- <div> Extra </div>-->
+                        <button class="buttons activefilters" id="vizActiveFilter" style="display: none"> Visible on Map </button>
+                        <button class="buttons activefilters" id="DateActiveFilter" style="display: none"> Date </button>
+                        <button class="buttons activefilters" id="RatingActiveFilter" style="display: none"> Rating </button>
+                        <button class="buttons activefilters" id="plcholderActiveFilter" style="display: none"> Placeholder </button>
                     </div>
                     <div id="featurecards">
                         <ul>
@@ -92,23 +92,25 @@ const posts = (await getCollection('blog')).sort(
         font-size: inherit;
     }
 
-    .mapfilters{
-	display : grid;
-	grid-auto-flow: column;
-	padding: 0.3em 0;
-	justify-content: start;
-	gap: 0.25rem;
-	grid-template-rows: auto;
-	overflow-x: scroll;
-	scrollbar-width: none;
-	scroll-behavior:smooth;
-	align-items: center;
+    #mapfilters{
+        display : grid;
+        grid-auto-flow: column;
+        padding: 0.3em 0;
+        justify-content: start;
+        gap: 0.25rem;
+        grid-template-rows: auto;
+        overflow-x: scroll;
+        scrollbar-width: none;
+        scroll-behavior:smooth;
+        align-items: center;
     }
 
-    .mapfilters div{
+    .activefilters{
         border: 1px solid black;
         width: fit-content;
-        padding: 0em 1em;
+        height: 100%;
+        padding: .5em .5em;
+        margin: 0em .1em;
         text-align: center;
         border-radius: 8px;
     }

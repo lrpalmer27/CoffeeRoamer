@@ -140,8 +140,7 @@ const posts = (await getCollection('blog')).sort(
       layers:['coffee-points']
     });
     const idss = visiblefeatures.map(f=>f.properties.id);
-    console.dir(idss)
-
+    
     posts.forEach(post => {
       if (idss.includes(post.id)) {
           post.data.mapvis = true;
@@ -150,7 +149,7 @@ const posts = (await getCollection('blog')).sort(
       }
       });
 
-    console.dir(idss.length);
+    // console.dir(idss.length);
     window.updateFeaturedCardsList();
   });
 

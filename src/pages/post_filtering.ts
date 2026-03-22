@@ -36,24 +36,63 @@ if (typeof document !== "undefined") {
             case 'VisOnMap':
                 button.classList?.toggle('active');
                 updateFeaturedCardsList();
+                document.getElementById('vizActiveFilter').style.display='';
                 break;
 
             case 'Rating':
                 button.classList?.toggle('active');
                 updateFeaturedCardsList();
+                document.getElementById('RatingActiveFilter').style.display='';
+                alert('This doesnt work yet! , please check back later');
                 break;
 
             case 'Date':
                 button.classList?.toggle('active');
                 updateFeaturedCardsList();
+                document.getElementById('DateActiveFilter').style.display='';
+                alert('This doesnt work yet! , please check back later');
                 break;
 
             case 'plcholder':
                 button.classList?.toggle('active')
                 updateFeaturedCardsList();
-                alert('Placeholder , please check back later');
+                document.getElementById('plcholderActiveFilter').style.display='';
+                alert('This doesnt work yet! , please check back later');
                 break;
                 
+        }
+    });
+}
+
+// this removes active filters from list when they get clicked
+if (typeof document !== "undefined") {
+    const filters = document.getElementById('mapfilters');
+
+    filters?.addEventListener('click', (e)=>{
+        const target = e.target as HTMLElement;
+        const actfiltrbutton = target.closest('button');
+        if (!actfiltrbutton) return;
+        //this hides the active filter button
+        document.getElementById(actfiltrbutton.id).style.display='none';
+
+        // this disables the filtering of that category
+        switch (actfiltrbutton.id) {
+            case 'vizActiveFilter':
+                actfiltrbutton.classList?.toggle('active');
+                document.getElementById('VisOnMap')?.classList.remove('active');
+                updateFeaturedCardsList();
+            case 'DateActiveFilter':
+                actfiltrbutton.classList?.toggle('active');
+                document.getElementById('Date')?.classList.remove('active');
+                updateFeaturedCardsList();
+            case 'RatingActiveFilter': 
+                actfiltrbutton.classList?.toggle('active');
+                document.getElementById('Rating')?.classList.remove('active');
+                updateFeaturedCardsList();
+            case 'plcholderActiveFilter':
+                actfiltrbutton.classList?.toggle('active');
+                document.getElementById('plcholder')?.classList.remove('active');
+                updateFeaturedCardsList();
         }
     });
 }
@@ -71,11 +110,14 @@ export function updateFeaturedCardsList(){
 
     if (activefilters?.length == 0) {
         // no filters applied case handling -> all shown by default on server rendering
-        // console.dir('no filters applied');
+        var posts = (window as any).posts;
+        // first show all
+        posts.forEach(p => {
+            document.getElementById(p.id).style.display='';
+        });
     }
     else {
         // apply filters
-        console.dir('filters applied!');
         if (!activefilters) return;
 
         activefilters.forEach(e => {
@@ -110,5 +152,5 @@ export function updateFeaturedCardsList(){
     };
 };
 
-// Make globally available
+// Make fcns global
 (window as any).updateFeaturedCardsList = updateFeaturedCardsList;
