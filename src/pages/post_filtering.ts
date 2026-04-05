@@ -36,27 +36,27 @@ if (typeof document !== "undefined") {
             case 'VisOnMap':
                 button.classList?.toggle('active');
                 updateFeaturedCardsList();
-                document.getElementById('vizActiveFilter').style.display='';
+                document.getElementById('vizActiveFilter')!.style.display='';
                 break;
 
             case 'Rating':
                 button.classList?.toggle('active');
                 updateFeaturedCardsList();
-                document.getElementById('RatingActiveFilter').style.display='';
+                document.getElementById('RatingActiveFilter')!.style.display='';
                 alert('This doesnt work yet! , please check back later');
                 break;
 
             case 'Date':
                 button.classList?.toggle('active');
                 updateFeaturedCardsList();
-                document.getElementById('DateActiveFilter').style.display='';
+                document.getElementById('DateActiveFilter')!.style.display='';
                 alert('This doesnt work yet! , please check back later');
                 break;
 
             case 'plcholder':
                 button.classList?.toggle('active')
                 updateFeaturedCardsList();
-                document.getElementById('plcholderActiveFilter').style.display='';
+                document.getElementById('plcholderActiveFilter')!.style.display='';
                 alert('This doesnt work yet! , please check back later');
                 break;
                 
@@ -73,7 +73,7 @@ if (typeof document !== "undefined") {
         const actfiltrbutton = target.closest('button');
         if (!actfiltrbutton) return;
         //this hides the active filter button
-        document.getElementById(actfiltrbutton.id).style.display='none';
+        document.getElementById(actfiltrbutton.id)!.style.display='none';
 
         // this disables the filtering of that category
         switch (actfiltrbutton.id) {
@@ -115,7 +115,7 @@ export function updateFeaturedCardsList(){
         var posts = (window as any).posts;
         // first show all
         posts.forEach(p => {
-            document.getElementById(p.id).style.display='';
+            document.getElementById(p.id)!.style.display='';
         });
     }
     else {
@@ -130,14 +130,14 @@ export function updateFeaturedCardsList(){
                 var posts = (window as any).posts;
                 // first show all
                 posts.forEach(p => {
-                    document.getElementById(p.id).style.display='';
+                    document.getElementById(p.id)!.style.display='';
                 });
 
                 // second hide all that arent on the map.
                 const tohide = posts.filter(p => p.data.mapvis === false);
                 tohide.forEach(p => {
                     const temp = document.getElementById(p.id);
-                    temp.style.display ='none';
+                    temp!.style.display ='none';
                 });
             }
             if (e.id == 'Date'){
