@@ -9,6 +9,7 @@ import Map from "../components/map.astro";
 import {BASE} from '../consts';
 // import { format } from 'maplibre-gl';
 import Filterpopup from '../components/filterpopup.astro';
+import Featuredcardelement from '../components/Featuredcardelement.astro';
 
 import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
@@ -47,21 +48,9 @@ const posts = (await getCollection('blog')).sort(
                     </div>
                     <div id="featurecards">
                         <ul>
-                            {
+                            {      
                                 posts.map((post)=> (
-                                    <li id=`${post.id}` class="individual-featured-item">   
-                                        <a href={`${BASE}posts/${post.id}/`}>
-                                            <h2 class="Name">{post.data.title}</h2>
-                                            <div class="CityDateBox">
-                                                <h5 class="c">{post.data.city}</h5>
-                                                <h5 class="c">-</h5>
-                                                <h5 class="c" style="text-align:left"><FormattedDate date={post.data.pubDate} format='short'/></h5>
-                                            </div>
-                                            <p class="descr">{post.data.description}</p>    
-                                            {/* <p> {post.data.heroImage.src} </p> */}
-                                            <img src={post?.data?.heroImage?.src} alt="image"/>
-                                        </a>
-                                    </li>
+                                    <Featuredcardelement post={post} />
                                 ))
                             }
                         </ul>
@@ -188,7 +177,6 @@ const posts = (await getCollection('blog')).sort(
         0 0px 4px rgba(var(--shadow), 25%), 0 0px 12px rgba(var(--shadow), 33%), 0 0px 20px
         rgba(var(--shadow), 33%);
     }
-
 
     .individual-featured-item:hover {
         color: var(--accent);

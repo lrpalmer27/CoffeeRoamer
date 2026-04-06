@@ -31,7 +31,7 @@ const posts = (await getCollection('blog')).sort(
       // zoom: 2.5,
       // --------------------
 
-      // -------------------- default center on southbay --------------------
+      // -------------------- default center on southbay LA --------------------
       center: [-118.37000311225792,33.8519980151288],
       zoom: 9.5,
       // --------------------
@@ -111,9 +111,12 @@ const posts = (await getCollection('blog')).sort(
       // make corresponding feature card highlighted
       hoveredID = feature.properties.id;
       const current = document.getElementById(hoveredID);
-      current.classList?.add('highlighted')
-
-
+      current.classList?.add('highlighted');
+      window.hoveredCoffeePoint(hoveredID);
+      const list = document.querySelector('#featurecards ul');
+      if (current && list) {
+        list.insertBefore(current, list.firstChild);
+      };
       // -----------------
 
       popup
@@ -132,9 +135,13 @@ const posts = (await getCollection('blog')).sort(
       map.getCanvas().style.cursor = ""; // reset cursor
       const current = document.getElementById(hoveredID);
       current.classList?.remove('highlighted')
+      document.getElementById("hoveredmapelement-specialfeaturedcard").style.display='none';
       // popup.remove();
     });
 
+  // this section checks which points are rendered on the map, sets visibility parameters T/F
+  // then calls on the update featured cards list to update according to what is currently rendered on the map 
+  // this is only activated when the visible on map filter is active.
   map.on('idle',() => {
     const visiblefeatures = map.queryRenderedFeatures({
       layers:['coffee-points']

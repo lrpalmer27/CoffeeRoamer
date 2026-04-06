@@ -102,6 +102,7 @@ if (typeof document !== "undefined") {
 if (typeof document !== "undefined") {
     document.addEventListener("DOMContentLoaded", function() {
         updateFeaturedCardsList();
+        hoveredCoffeePoint();
     });
 }
 
@@ -153,8 +154,32 @@ export function updateFeaturedCardsList(){
          
     };
     
-// Make fcns global
+// Make fcn global
 (window as any).updateFeaturedCardsList = updateFeaturedCardsList;
 };
+
+
+// this function will be called when a coffee point on the map is hovered. When this happens, this function
+// will display the corresponding featured card at the top of the featured cards list. 
+// this is done by hiding/showing a single card at the top of the list with the corresponding information
+export function hoveredCoffeePoint(hoveredID: string = 'none'){
+    if (hoveredID != 'none'){
+        // nesting function in here to avoid no data passing through
+        console.dir(hoveredID);
+    }
+    else if (hoveredID == 'none'){
+        //no data passed. Hide top feature card here
+        console.dir('no data passed. Hide top feature card here');
+    };
+
+    
+
+
+// make fcn accessible on other pages via window
+(window as any).hoveredCoffeePoint = hoveredCoffeePoint;
+};
+
+
+
 
 
