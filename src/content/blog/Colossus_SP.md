@@ -2,7 +2,7 @@
 title: 'Colossus Harbor'
 description: 'Cafe + Bakery in downtown San Pedro'
 location: '511 S Harbor Blvd, San Pedro, CA 90731'
-city: San Pedro, Ca
+city: San Pedro, CA
 coords: [33.742934202227104, -118.27983605572813]
 pubDate: '04/12/2026'
 heroImage: '../../assets/Colossus1.JPG'
