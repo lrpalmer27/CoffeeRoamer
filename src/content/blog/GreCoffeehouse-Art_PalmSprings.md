@@ -2,7 +2,7 @@
 title: 'Gre Coffeehouse & Art Gallery'
 description: 'Swanky art gallery + coffeehouse'
 location: '278 N Palm Canyon Dr Unit C, Palm Springs, CA 92262'
-city: Palm Springs, Ca
+city: Palm Springs, CA
 coords: [33.826426574004984, -116.54627025974781]
 pubDate: '04/18/2026'
 heroImage: '../../assets/GreCoffeehouse_1.JPG'
