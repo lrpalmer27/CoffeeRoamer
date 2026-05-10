@@ -2,7 +2,7 @@
 title: 'Klatch Coffee'
 description: 'Modern coffee shop Redondo Beach'
 location: '306 S Pacific Coast Hwy, Redondo Beach, CA 90277'
-city: Palm Springs, CA
+city: Redondo Beach, CA
 coords: [33.83806376005813, -118.38499558012444]
 pubDate: '05/10/2026'
 heroImage: '../../assets/KlatchCoffee1.JPG'
