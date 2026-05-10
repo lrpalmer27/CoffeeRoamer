@@ -6,7 +6,8 @@ import {BASE} from './src/consts.ts';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://lrpalmer27.github.io',
+    // site: 'https://lrpalmer27.github.io',
+    site: 'https://coffeeroamer.lrpalmer.com',
     base: BASE,
     integrations: [sitemap()],
 });
