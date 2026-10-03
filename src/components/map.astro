@@ -1,6 +1,6 @@
 ---
 import "maplibre-gl/dist/maplibre-gl.css";
-import maplibregl from "maplibre-gl";
+import maplibreScriptUrl from "maplibre-gl/dist/maplibre-gl.js?url";
 import {BASE} from '../consts.ts';
 import MapPopupTemplate from '../components/MapPopup.astro';
 
@@ -12,154 +12,150 @@ const posts = (await getCollection('blog')).sort(
 ---
 <MapPopupTemplate />
 
-<div id="map" 
-  style="width:100%; height:100%;"
-></div>
+<div id="map" data-base={BASE}></div>
 
-<script type="module" define:vars={{posts, BASE}}>
+<script src={maplibreScriptUrl} is:inline></script>
+
+<script>
+  const postsData = document.getElementById("coffee-posts-data");
+  const posts = JSON.parse(postsData?.textContent ?? "[]");
   window.posts = posts;
-  // console.log("coords var ->",orderedPosts.coords);
-  window.addEventListener("DOMContentLoaded", () => {
-      const map = new maplibregl.Map({
+
+  const initMap = () => {
+    const mapElement = document.getElementById("map");
+    const maplibregl = window.maplibregl;
+    if (!mapElement || !maplibregl) {
+      console.error('MapLibre failed to load.');
+      return;
+    }
+    const base = mapElement.dataset.base ?? "/";
+
+    const map = new maplibregl.Map({
       container: "map",
-      // style: "https://demotiles.maplibre.org/style.json", // testing demo tile
-      style: `${BASE}mapstyle.json`,
-      attributionControl: false,
-
-      // -------------------- center on north america, roughly --------------------
-      // center: [-100,48],
-      // zoom: 2.5,
-      // --------------------
-
-      // -------------------- default center on southbay LA --------------------
-      center: [-118.37000311225792,33.8519980151288],
+      style: `${base}mapstyle.json`,
+      attributionControl: true,
+      center: [-118.37000311225792, 33.8519980151288],
       zoom: 9.5,
-      // --------------------
     });
-    
+
+    map.on('error', (event) => console.error('MapLibre error:', event.error));
     map.addControl(new maplibregl.NavigationControl());
-    
-    const features = posts.map(c => ({
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [c.data.coords[1], c.data.coords[0]]
-        }, // this is changing from latlong to longlat
-      "properties": { "name": c.data.title, "id":c.id, "heroimgsrc": c.data.heroImage.src,
-                      'city':c.data.city, 'description':c.data.description,
-                      'url':`${BASE}posts/${c.id}/`
-                    },
+
+    const features = posts.map((c) => ({
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [c.data.coords[1], c.data.coords[0]],
+      },
+      properties: {
+        name: c.data.title,
+        id: c.id,
+        heroimgsrc: c.data.heroImage.src,
+        city: c.data.city,
+        description: c.data.description,
+        url: `${base}posts/${c.id}/`,
+      },
     }));
 
-    map.on("load",() => {
-      map.addSource('CoffeeCoordinates',{
+    map.on("load", () => {
+      map.addSource('CoffeeCoordinates', {
         type: 'geojson',
         data: {
-            "type": "FeatureCollection",
-            "features": features
-          }
+          type: 'FeatureCollection',
+          features,
+        },
       });
-
-      // this is the red icon symbol as svg
-      const svg1 = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                    <path fill="#ae3c3c" d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
-                    </svg>`;
-
-     const img = new Image();
-      img.onload = () => {
-        map.addImage('locationIcon', img);
-        };
-      img.onerror = e => console.error('SVG load error', e);
-
-      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg1);
 
       map.addLayer({
-          'id': 'coffee-points',
-          'type': 'symbol',
-          'source': 'CoffeeCoordinates',
-          'layout':{
-            'icon-image':'locationIcon',
-            'icon-size': 1,
-            'icon-allow-overlap': true
-          }
+        id: 'coffee-points',
+        type: 'circle',
+        source: 'CoffeeCoordinates',
+        paint: {
+          'circle-radius': 8,
+          'circle-color': '#ae3c3c',
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 2,
+        },
       });
-
     });
 
-    let popup = new maplibregl.Popup({
+    const popup = new maplibregl.Popup({
       closeButton: true,
       closeOnClick: true,
       maxWidth: '40%',
-      anchor:'left',
+      anchor: 'left',
     });
 
     let hoveredID = null;
-    map.on("mouseenter", "coffee-points", (e) => {
-      map.getCanvas().style.cursor = "pointer"; // change cursor
-      const feature = e.features[0]; // The clicked feature
 
-      // fill popup with data -----------------
-      const template = document.querySelector("#map-popup-template");
+    map.on('mouseenter', 'coffee-points', (e) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const feature = e.features[0];
+      const template = document.querySelector('#map-popup-template');
+      if (!template) return;
+
       const mappopupnode = template.content.cloneNode(true);
+      mappopupnode.querySelector('.Name').textContent = feature.properties.name;
+      mappopupnode.querySelector('.her0image').src = feature.properties.heroimgsrc;
+      mappopupnode.querySelector('.city').textContent = feature.properties.city;
+      mappopupnode.querySelector('.descr').textContent = feature.properties.description;
+      mappopupnode.querySelector('.url').href = feature.properties.url;
 
-      mappopupnode.querySelector(".Name").textContent = feature.properties.name;
-      mappopupnode.querySelector(".her0image").src = feature.properties.heroimgsrc;
-      mappopupnode.querySelector(".city").textContent = feature.properties.city;
-      mappopupnode.querySelector(".descr").textContent = feature.properties.description;
-      mappopupnode.querySelector(".url").href = feature.properties.url;
-
-      // make corresponding feature card highlighted
       hoveredID = feature.properties.id;
       const current = document.getElementById(hoveredID);
-      current.classList?.add('highlighted');
-      window.hoveredCoffeePoint(hoveredID);
+      current?.classList?.add('highlighted');
+
+      if (typeof window.hoveredCoffeePoint === 'function') {
+        window.hoveredCoffeePoint(hoveredID);
+      }
+
       const list = document.querySelector('#featurecards ul');
       if (current && list) {
         list.insertBefore(current, list.firstChild);
-      };
-      // -----------------
+      }
 
       popup
         .setLngLat(feature.geometry.coordinates)
-        // .setHTML(`<a href=${BASE}posts/${feature.properties.id}> ${feature.properties.name}</a>`)
         .setDOMContent(mappopupnode)
-        .setOffset([5,0])
-        .addTo(map)
-
-        contentEl.style.maxWidth = 'none';
-        contentEl.style.padding = '0 ';
-
+        .setOffset([5, 0])
+        .addTo(map);
     });
 
-      map.on("mouseleave", "coffee-points", () => {
-      map.getCanvas().style.cursor = ""; // reset cursor
+    map.on('mouseleave', 'coffee-points', () => {
+      map.getCanvas().style.cursor = '';
       const current = document.getElementById(hoveredID);
-      current.classList?.remove('highlighted')
-      document.getElementById("hoveredmapelement-specialfeaturedcard").style.display='none';
-      // popup.remove();
+      current?.classList?.remove('highlighted');
+      const hoveredFeaturedCard = document.getElementById('hoveredmapelement-specialfeaturedcard');
+      if (hoveredFeaturedCard) {
+        hoveredFeaturedCard.style.display = 'none';
+      }
     });
 
-  // this section checks which points are rendered on the map, sets visibility parameters T/F
-  // then calls on the update featured cards list to update according to what is currently rendered on the map 
-  // this is only activated when the visible on map filter is active.
-  map.on('idle',() => {
-    const visiblefeatures = map.queryRenderedFeatures({
-      layers:['coffee-points']
-    });
-    const idss = visiblefeatures.map(f=>f.properties.id);
-    
-    posts.forEach(post => {
-      if (idss.includes(post.id)) {
-          post.data.mapvis = true;
-      } else {
-          post.data.mapvis = false;
-      }
+    map.on('idle', () => {
+      const visiblefeatures = map.queryRenderedFeatures({ layers: ['coffee-points'] });
+      const idss = visiblefeatures.map((f) => f.properties.id);
+
+      posts.forEach((post) => {
+        post.data.mapvis = idss.includes(post.id);
       });
 
-    // console.dir(idss.length);
-    window.updateFeaturedCardsList();
-  });
+      if (typeof window.updateFeaturedCardsList === 'function') {
+        window.updateFeaturedCardsList();
+      }
+    });
+  };
 
-  });
-
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMap, { once: true });
+  } else {
+    initMap();
+  }
 </script>
+
+<style>
+  #map {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+  }
+</style>

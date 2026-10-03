@@ -4,7 +4,6 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import FormattedDate from '../components/FormattedDate.astro';
-import "maplibre-gl/dist/maplibre-gl.css";
 import Map from "../components/map.astro";
 import {BASE} from '../consts';
 // import { format } from 'maplibre-gl';
@@ -22,8 +21,6 @@ const posts = (await getCollection('blog')).sort(
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-        <script src='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js'></script>
-        <link href='https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css' rel='stylesheet' />
 	</head>
         <body>
             <Header />
@@ -36,7 +33,9 @@ const posts = (await getCollection('blog')).sort(
                         <h5 style="font-style: normal"> Filter </h5>
                         <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"><path fill="var(--gray)" d="M15 19.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0L9.29 16.7a.99.99 0 0 1-.29-.83v-5.12L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L15 10.75zM7.04 5L11 10.06v5.52l2 2v-7.53L16.96 5z"/></svg>
                     </button>
-                    <script> import './post_filtering' </script>
+                    <script>
+                        import './post_filtering.ts';
+                    </script>
                     <! -- 'this is the popup element' -->
                     <Filterpopup/>  
                     <div id="mapfilters">
@@ -55,6 +54,7 @@ const posts = (await getCollection('blog')).sort(
                             }
                         </ul>
                     </div>
+                    <script id="coffee-posts-data" type="application/json" set:html={JSON.stringify(posts).replace(/</g, '\\u003c')}></script>
                     <div id='actualmap'>
                         <Map />
                     </div>    
@@ -112,7 +112,8 @@ const posts = (await getCollection('blog')).sort(
         box-shadow: var(--box-shadow);
         flex-direction: column;
         min-width: 300px;
-        
+        min-height: 420px;
+        height: 70vh;
     }
 
     #featurecards{
