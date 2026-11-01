@@ -3,12 +3,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibreScriptUrl from "maplibre-gl/dist/maplibre-gl.js?url";
 import {BASE} from '../consts.ts';
 import MapPopupTemplate from '../components/MapPopup.astro';
-
-
-import { getCollection } from 'astro:content';
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
 ---
 <MapPopupTemplate />
 
@@ -20,6 +14,7 @@ const posts = (await getCollection('blog')).sort(
   const postsData = document.getElementById("coffee-posts-data");
   const posts = JSON.parse(postsData?.textContent ?? "[]");
   window.posts = posts;
+  window.wishlistPlaces ??= [];
 
   const initMap = () => {
     const mapElement = document.getElementById("map");
@@ -50,7 +45,7 @@ const posts = (await getCollection('blog')).sort(
       properties: {
         name: c.data.title,
         id: c.id,
-        heroimgsrc: c.data.heroImage.src,
+        heroimgsrc: c.data.heroImage?.src ?? '',
         city: c.data.city,
         description: c.data.description,
         url: `${base}posts/${c.id}/`,
@@ -77,41 +72,97 @@ const posts = (await getCollection('blog')).sort(
           'circle-stroke-width': 2,
         },
       });
+
+      const wishlistFeatures = (window.wishlistPlaces ?? []).map((place) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [place.coords[1], place.coords[0]],
+        },
+        properties: {
+          id: place.id,
+          name: place.name,
+          heroimgsrc: '',
+          city: place.location,
+          description: place.notes || 'On your wishlist',
+          url: `https://www.google.com/maps/search/?api=1&query=${place.coords[0]},${place.coords[1]}`,
+        },
+      }));
+
+      map.addSource('WishlistCoordinates', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: wishlistFeatures,
+        },
+      });
+
+      map.addLayer({
+        id: 'wishlist-points',
+        type: 'circle',
+        source: 'WishlistCoordinates',
+        layout: {
+          visibility: window.wishlistMapVisible ? 'visible' : 'none',
+        },
+        paint: {
+          'circle-radius': 9,
+          'circle-color': '#d17b27',
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 2,
+        },
+      });
+
+      window.setWishlistVisible = (visible) => {
+        window.wishlistMapVisible = visible;
+        if (map.getLayer('wishlist-points')) {
+          map.setLayoutProperty('wishlist-points', 'visibility', visible ? 'visible' : 'none');
+        }
+      };
     });
 
     const popup = new maplibregl.Popup({
       closeButton: true,
       closeOnClick: true,
-      maxWidth: '40%',
-      anchor: 'left',
+      maxWidth: 'min(420px, 48%)',
     });
 
     let hoveredID = null;
 
-    map.on('mouseenter', 'coffee-points', (e) => {
+    const showPopupForFeature = (feature, isWishlistPlace = false) => {
       map.getCanvas().style.cursor = 'pointer';
-      const feature = e.features[0];
       const template = document.querySelector('#map-popup-template');
       if (!template) return;
 
       const mappopupnode = template.content.cloneNode(true);
+      if (isWishlistPlace) {
+        mappopupnode.querySelector('.MapPopupClass').classList.add('wishlist-popup');
+      }
       mappopupnode.querySelector('.Name').textContent = feature.properties.name;
-      mappopupnode.querySelector('.her0image').src = feature.properties.heroimgsrc;
+      const image = mappopupnode.querySelector('.her0image');
+      image.src = feature.properties.heroimgsrc;
+      image.hidden = isWishlistPlace || !feature.properties.heroimgsrc;
       mappopupnode.querySelector('.city').textContent = feature.properties.city;
       mappopupnode.querySelector('.descr').textContent = feature.properties.description;
-      mappopupnode.querySelector('.url').href = feature.properties.url;
-
-      hoveredID = feature.properties.id;
-      const current = document.getElementById(hoveredID);
-      current?.classList?.add('highlighted');
-
-      if (typeof window.hoveredCoffeePoint === 'function') {
-        window.hoveredCoffeePoint(hoveredID);
+      const link = mappopupnode.querySelector('.url');
+      link.href = feature.properties.url;
+      if (isWishlistPlace) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
       }
 
-      const list = document.querySelector('#featurecards ul');
-      if (current && list) {
-        list.insertBefore(current, list.firstChild);
+      if (!isWishlistPlace) {
+        hoveredID = feature.properties.id;
+        const current = document.getElementById(hoveredID);
+        current?.classList?.add('highlighted');
+
+        if (typeof window.hoveredCoffeePoint === 'function') {
+          window.hoveredCoffeePoint(hoveredID);
+        }
+
+        const list = document.querySelector('#featurecards ul');
+        if (current && list) {
+          list.insertBefore(current, list.firstChild);
+        }
       }
 
       popup
@@ -119,6 +170,14 @@ const posts = (await getCollection('blog')).sort(
         .setDOMContent(mappopupnode)
         .setOffset([5, 0])
         .addTo(map);
+    };
+
+    map.on('mouseenter', 'coffee-points', (event) => {
+      showPopupForFeature(event.features[0]);
+    });
+
+    map.on('mouseenter', 'wishlist-points', (event) => {
+      showPopupForFeature(event.features[0], true);
     });
 
     map.on('mouseleave', 'coffee-points', () => {
@@ -131,18 +190,62 @@ const posts = (await getCollection('blog')).sort(
       }
     });
 
-    map.on('idle', () => {
+    map.on('mouseleave', 'wishlist-points', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
+    window.addEventListener('coffee-roamer:wishlist-changed', (event) => {
+      const places = (event as CustomEvent).detail;
+      const source = map.getSource('WishlistCoordinates');
+      if (!Array.isArray(places) || !source) return;
+
+      const features = places.map((place) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [place.coords[1], place.coords[0]],
+        },
+        properties: {
+          id: place.id,
+          name: place.name,
+          heroimgsrc: '',
+          city: place.location,
+          description: place.notes || 'On your wishlist',
+          url: `https://www.google.com/maps/search/?api=1&query=${place.coords[0]},${place.coords[1]}`,
+        },
+      }));
+      source.setData({
+        type: 'FeatureCollection',
+        features,
+      });
+    });
+
+    const updateVisiblePosts = () => {
       const visiblefeatures = map.queryRenderedFeatures({ layers: ['coffee-points'] });
-      const idss = visiblefeatures.map((f) => f.properties.id);
+      const visibleIds = new Set(visiblefeatures.map((f) => f.properties.id));
 
       posts.forEach((post) => {
-        post.data.mapvis = idss.includes(post.id);
+        post.data.mapvis = visibleIds.has(post.id);
       });
 
       if (typeof window.updateFeaturedCardsList === 'function') {
         window.updateFeaturedCardsList();
       }
-    });
+    };
+
+    let visibilityUpdateScheduled = false;
+    const scheduleVisibilityUpdate = () => {
+      if (visibilityUpdateScheduled) return;
+
+      visibilityUpdateScheduled = true;
+      map.once('idle', () => {
+        visibilityUpdateScheduled = false;
+        updateVisiblePosts();
+      });
+    };
+
+    scheduleVisibilityUpdate();
+    map.on('moveend', scheduleVisibilityUpdate);
   };
 
   if (document.readyState === 'loading') {

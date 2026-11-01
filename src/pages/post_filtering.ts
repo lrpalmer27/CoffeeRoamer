@@ -1,185 +1,147 @@
-import type { CollectionEntry } from "astro:content";
+type FilterPost = {
+    id: string;
+    data: {
+        mapvis: boolean;
+        OverallRanking: number;
+        pubDate: string;
+    };
+};
 
-// Opening filter selection window
-if (typeof document !== "undefined") {
-    const filter_button = document.getElementById('filtr');
-    const filterwindow = document.getElementById('popupfiltermenu');
-    
-    // open;
-    filter_button?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        filterwindow?.classList?.toggle('visible');
-    });
+const filterChips: Record<string, string> = {
+    VisOnMap: 'vizActiveFilter',
+    Rating: 'RatingActiveFilter',
+    Date: 'DateActiveFilter',
+    plcholder: 'plcholderActiveFilter',
+    WishlistPins: 'wishlistActiveFilter',
+};
 
-    // Prevent clicks inside the popup from closing it
-    filterwindow?.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
+const activeFilterButton = (id: string) =>
+    document.getElementById(id) as HTMLButtonElement | null;
 
-    // Close when clicking outside
-    document.addEventListener('click', () => {
-        filterwindow?.classList?.remove('visible');
+const updateChip = (filterId: string, isActive: boolean) => {
+    const chip = document.getElementById(filterChips[filterId]);
+    if (chip) chip.style.display = isActive ? '' : 'none';
+};
+
+const setFilterActive = (filterId: string, isActive: boolean) => {
+    const button = activeFilterButton(filterId);
+    if (!button) return;
+
+    if (filterId === 'WishlistPins') {
+        window.wishlistMapVisible = isActive;
+        window.setWishlistVisible?.(isActive);
+    }
+
+    if (!isActive && filterId === 'Date') {
+        const fromInput = document.getElementById('visitDateFrom') as HTMLInputElement | null;
+        const throughInput = document.getElementById('visitDateThrough') as HTMLInputElement | null;
+        if (fromInput) fromInput.value = '';
+        if (throughInput) throughInput.value = '';
+    }
+
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+    updateChip(filterId, isActive);
+
+    const options = document.getElementById(`${filterId}Options`);
+    if (options) options.toggleAttribute('hidden', !isActive);
+};
+
+const getLocalDate = () => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60_000;
+    return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+};
+
+export function updateFeaturedCardsList() {
+    const posts = (window as Window & { posts?: FilterPost[] }).posts ?? [];
+    const showVisibleOnly = activeFilterButton('VisOnMap')?.classList.contains('active') ?? false;
+    const ratingActive = activeFilterButton('Rating')?.classList.contains('active') ?? false;
+    const dateActive = activeFilterButton('Date')?.classList.contains('active') ?? false;
+    const futureActive = activeFilterButton('plcholder')?.classList.contains('active') ?? false;
+    const minRating = Number((document.getElementById('minRating') as HTMLSelectElement | null)?.value ?? 0);
+    const fromDate = (document.getElementById('visitDateFrom') as HTMLInputElement | null)?.value ?? '';
+    const throughDate = (document.getElementById('visitDateThrough') as HTMLInputElement | null)?.value ?? '';
+    const today = getLocalDate();
+
+    posts.forEach((post) => {
+        const card = document.getElementById(post.id);
+        if (!card) return;
+
+        const visitedDate = post.data.pubDate.slice(0, 10);
+        const matches =
+            (!showVisibleOnly || post.data.mapvis) &&
+            (!ratingActive || post.data.OverallRanking >= minRating) &&
+            (!dateActive || (
+                Boolean(visitedDate) &&
+                (!fromDate || visitedDate >= fromDate) &&
+                (!throughDate || visitedDate <= throughDate)
+            )) &&
+            (!futureActive || visitedDate > today);
+
+        card.style.display = matches ? '' : 'none';
     });
 }
 
-// activating filter status to be read by list generator
-if (typeof document !== "undefined") {
-    const filters = document.getElementById('filterclickbuttons');
+if (typeof document !== 'undefined') {
+    const filterButton = document.getElementById('filtr');
+    const filterWindow = document.getElementById('popupfiltermenu');
+    const filterControls = document.getElementById('filterclickbuttons');
+    const activeFilters = document.getElementById('mapfilters');
 
-    filters?.addEventListener('click', (e)=>{
-        const target = e.target as HTMLElement;
+    filterButton?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        filterWindow?.classList.toggle('visible');
+    });
+
+    filterWindow?.addEventListener('click', (event) => event.stopPropagation());
+    document.addEventListener('click', () => filterWindow?.classList.remove('visible'));
+
+    filterControls?.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
         const button = target.closest('button');
+        if (!button || !filterChips[button.id]) return;
 
-        if (!button) return;
-
-        switch (button.id) {
-            case 'VisOnMap':
-                button.classList?.toggle('active');
-                updateFeaturedCardsList();
-                document.getElementById('vizActiveFilter')!.style.display='';
-                break;
-
-            case 'Rating':
-                button.classList?.toggle('active');
-                updateFeaturedCardsList();
-                document.getElementById('RatingActiveFilter')!.style.display='';
-                alert('This doesnt work yet! , please check back later');
-                break;
-
-            case 'Date':
-                button.classList?.toggle('active');
-                updateFeaturedCardsList();
-                document.getElementById('DateActiveFilter')!.style.display='';
-                alert('This doesnt work yet! , please check back later');
-                break;
-
-            case 'plcholder':
-                button.classList?.toggle('active')
-                updateFeaturedCardsList();
-                document.getElementById('plcholderActiveFilter')!.style.display='';
-                alert('This doesnt work yet! , please check back later');
-                break;
-                
-        }
-    });
-}
-
-// this removes active filters from list when they get clicked
-if (typeof document !== "undefined") {
-    const filters = document.getElementById('mapfilters');
-
-    filters?.addEventListener('click', (e)=>{
-        const target = e.target as HTMLElement;
-        const actfiltrbutton = target.closest('button');
-        if (!actfiltrbutton) return;
-        //this hides the active filter button
-        document.getElementById(actfiltrbutton.id)!.style.display='none';
-
-        // this disables the filtering of that category
-        switch (actfiltrbutton.id) {
-            case 'vizActiveFilter':
-                actfiltrbutton.classList?.toggle('active');
-                document.getElementById('VisOnMap')?.classList.remove('active');
-                updateFeaturedCardsList();
-            case 'DateActiveFilter':
-                actfiltrbutton.classList?.toggle('active');
-                document.getElementById('Date')?.classList.remove('active');
-                updateFeaturedCardsList();
-            case 'RatingActiveFilter': 
-                actfiltrbutton.classList?.toggle('active');
-                document.getElementById('Rating')?.classList.remove('active');
-                updateFeaturedCardsList();
-            case 'plcholderActiveFilter':
-                actfiltrbutton.classList?.toggle('active');
-                document.getElementById('plcholder')?.classList.remove('active');
-                updateFeaturedCardsList();
-        }
-    });
-}
-
-// this loads the featured card list when the page loads
-// and after applying filters
-if (typeof document !== "undefined") {
-    document.addEventListener("DOMContentLoaded", function() {
+        setFilterActive(button.id, !button.classList.contains('active'));
         updateFeaturedCardsList();
-        hoveredCoffeePoint();
     });
+
+    activeFilters?.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const chip = target.closest('button');
+        if (!chip) return;
+
+        const filterId = Object.keys(filterChips).find((id) => filterChips[id] === chip.id);
+        if (!filterId) return;
+
+        setFilterActive(filterId, false);
+        updateFeaturedCardsList();
+    });
+
+    document.getElementById('minRating')?.addEventListener('change', (event) => {
+        const rating = Number((event.target as HTMLSelectElement).value);
+        setFilterActive('Rating', rating > 0);
+        updateFeaturedCardsList();
+    });
+
+    ['visitDateFrom', 'visitDateThrough'].forEach((inputId) => {
+        document.getElementById(inputId)?.addEventListener('change', () => {
+            const hasDateRange = Boolean(
+                (document.getElementById('visitDateFrom') as HTMLInputElement | null)?.value ||
+                (document.getElementById('visitDateThrough') as HTMLInputElement | null)?.value,
+            );
+            setFilterActive('Date', hasDateRange);
+            updateFeaturedCardsList();
+        });
+    });
+
+    window.updateFeaturedCardsList = updateFeaturedCardsList;
+    document.addEventListener('DOMContentLoaded', updateFeaturedCardsList, { once: true });
 }
 
-// function to filter featured posts
-export function updateFeaturedCardsList(){
-    const filters = document.getElementById('filterclickbuttons');
-    const activefilters = filters?.querySelectorAll('button.active');
-
-    if (activefilters?.length == 0) {
-        // no filters applied case handling -> all shown by default on server rendering
-        var posts = (window as any).posts;
-        // first show all
-        posts.forEach(p => {
-            document.getElementById(p.id)!.style.display='';
-        });
+declare global {
+    interface Window {
+        updateFeaturedCardsList: typeof updateFeaturedCardsList;
+        setWishlistVisible?: (visible: boolean) => void;
     }
-    else {
-        // apply filters
-        if (!activefilters) return;
-
-        activefilters.forEach(e => {
-            if (e.id == 'VisOnMap'){
-                // hide posts that are not visible on the map view screen
-                // TODO: clean this up. There is definitely a more efficient
-                // way to do this.
-                var posts = (window as any).posts;
-                // first show all
-                posts.forEach(p => {
-                    document.getElementById(p.id)!.style.display='';
-                });
-
-                // second hide all that arent on the map.
-                const tohide = posts.filter(p => p.data.mapvis === false);
-                tohide.forEach(p => {
-                    const temp = document.getElementById(p.id);
-                    temp!.style.display ='none';
-                });
-            }
-            if (e.id == 'Date'){
-
-            }
-            if (e.id == 'Rating'){
-                
-            }
-            if (e.id == 'plcholder'){
-                
-            }
-        }); 
-         
-    };
-    
-// Make fcn global
-(window as any).updateFeaturedCardsList = updateFeaturedCardsList;
-};
-
-
-// this function will be called when a coffee point on the map is hovered. When this happens, this function
-// will display the corresponding featured card at the top of the featured cards list. 
-// this is done by hiding/showing a single card at the top of the list with the corresponding information
-export function hoveredCoffeePoint(hoveredID: string = 'none'){
-    if (hoveredID != 'none'){
-        // nesting function in here to avoid no data passing through
-        console.dir(hoveredID);
-    }
-    else if (hoveredID == 'none'){
-        //no data passed. Hide top feature card here
-        console.dir('no data passed. Hide top feature card here');
-    };
-
-    
-
-
-// make fcn accessible on other pages via window
-(window as any).hoveredCoffeePoint = hoveredCoffeePoint;
-};
-
-
-
-
-
+}

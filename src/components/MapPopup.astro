@@ -6,7 +6,7 @@ import {BASE} from '../consts.ts';
 <template id="map-popup-template">
     <a class="url" href={`${BASE}posts/`}>
     <div class="MapPopupClass">
-        <img class="her0image"> </img>
+        <img class="her0image" alt="">
         <div class="popupcontent">
             <h2 class="Name"></h2>
             <h4 class="city"></h4>
@@ -19,36 +19,54 @@ import {BASE} from '../consts.ts';
 <style>
     .MapPopupClass{
         display: grid;
-        grid-template-columns: 10em min-content;
-        gap: 0.25em; 
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+        gap: 0.75em;
         align-items: center;
         font-family: "myFont";
     }
 
+    .MapPopupClass.wishlist-popup {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .her0image{ 
-        object-fit: contain;
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 6px;
     }
 
     .popupcontent{ 
         justify-content: left;
-        margin: 0.5em 0.5em;
-        flex: auto;
+        min-width: 0;
         font-family: "myFont";
     }
 
     .descr{
-        white-space: nowrap;
+        margin: 0.25em 0 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        white-space: normal;
+        overflow-wrap: anywhere;
         font-family: "myFont";
         color: var(--gray-light);
     }
 
     .city{ 
+        font-size: 0.9rem;
         font-style: italic;
         color: var(--gray-light);
     }
 
     .Name{ 
-        /* color: inherit; */
+        margin: 0;
+        font-size: 1.15rem;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
     }
 
     .url{
@@ -63,6 +81,16 @@ import {BASE} from '../consts.ts';
     .MapPopupClass:hover .her0image {
         box-shadow: var(--box-shadow);
     }
-    
+
+    @media (max-width: 480px) {
+        .MapPopupClass {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .her0image {
+            max-height: 90px;
+            aspect-ratio: 16 / 9;
+        }
+    }
 
 </style>

@@ -1,0 +1,287 @@
+<section id="wishlist-manager" aria-labelledby="wishlist-title">
+    <div class="wishlist-heading">
+        <div>
+            <h2 id="wishlist-title">Places to visit</h2>
+            <p>Add places with coordinates to save them in this browser and show them on the map.</p>
+        </div>
+        <details id="wishlist-add">
+            <summary class="buttons">Add a place</summary>
+            <form id="wishlist-form">
+                <label>
+                    Place name
+                    <input name="name" type="text" maxlength="100" required>
+                </label>
+                <label>
+                    Address or city
+                    <input name="location" type="text" maxlength="160" required>
+                </label>
+                <div class="coordinate-fields">
+                    <label>
+                        Latitude
+                        <input name="latitude" type="number" min="-90" max="90" step="any" placeholder="33.8926" required>
+                    </label>
+                    <label>
+                        Longitude
+                        <input name="longitude" type="number" min="-180" max="180" step="any" placeholder="-118.3952" required>
+                    </label>
+                </div>
+                <label>
+                    Notes (optional)
+                    <textarea name="notes" maxlength="300" rows="2"></textarea>
+                </label>
+                <button class="buttons save-wishlist-place" type="submit">Save place</button>
+            </form>
+        </details>
+    </div>
+    <p id="wishlist-status" role="status" aria-live="polite"></p>
+    <ul id="wishlist-list" aria-label="Places on your wishlist"></ul>
+</section>
+
+<script>
+    import { readWishlist, saveWishlist, type WishlistPlace } from '../lib/wishlist';
+
+    const list = document.getElementById('wishlist-list');
+    const status = document.getElementById('wishlist-status');
+    const form = document.getElementById('wishlist-form') as HTMLFormElement | null;
+    const addDetails = document.getElementById('wishlist-add');
+    let places: WishlistPlace[] = [];
+
+    const renderWishlist = () => {
+        if (!list) return;
+        list.replaceChildren();
+
+        if (places.length === 0) {
+            const emptyMessage = document.createElement('li');
+            emptyMessage.className = 'wishlist-empty';
+            emptyMessage.textContent = 'Your wishlist is empty. Add a place to get started.';
+            list.append(emptyMessage);
+            return;
+        }
+
+        places.forEach((place) => {
+            const item = document.createElement('li');
+            item.className = 'wishlist-place';
+
+            const details = document.createElement('div');
+            const name = document.createElement('h3');
+            name.textContent = place.name;
+            const location = document.createElement('p');
+            location.textContent = place.location;
+            const coordinates = document.createElement('small');
+            coordinates.textContent = `${place.coords[0]}, ${place.coords[1]}`;
+            details.append(name, location, coordinates);
+
+            if (place.notes) {
+                const notes = document.createElement('p');
+                notes.className = 'wishlist-notes';
+                notes.textContent = place.notes;
+                details.append(notes);
+            }
+
+            const remove = document.createElement('button');
+            remove.className = 'buttons remove-wishlist-place';
+            remove.type = 'button';
+            remove.dataset.removeWishlist = place.id;
+            remove.textContent = 'Remove';
+            remove.setAttribute('aria-label', `Remove ${place.name} from wishlist`);
+            item.append(details, remove);
+            list.append(item);
+        });
+    };
+
+    const loadWishlist = () => {
+        try {
+            places = readWishlist();
+            window.wishlistPlaces = places;
+            if (status) status.textContent = '';
+            renderWishlist();
+            window.dispatchEvent(new CustomEvent<WishlistPlace[]>('coffee-roamer:wishlist-changed', {
+                detail: places,
+            }));
+        } catch (error) {
+            console.error('Unable to load the saved wishlist.', error);
+            if (status) status.textContent = 'Could not load your saved wishlist. Check browser storage and reload.';
+        }
+    };
+
+    form?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const name = String(formData.get('name') ?? '').trim();
+        const location = String(formData.get('location') ?? '').trim();
+        const latitude = Number(formData.get('latitude'));
+        const longitude = Number(formData.get('longitude'));
+        const notes = String(formData.get('notes') ?? '').trim();
+
+        if (!name || !location || !Number.isFinite(latitude) || !Number.isFinite(longitude) ||
+            latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            if (status) status.textContent = 'Enter a name, location, and valid latitude and longitude.';
+            return;
+        }
+
+        places = [...places, {
+            id: crypto.randomUUID(),
+            name,
+            location,
+            notes,
+            coords: [latitude, longitude],
+        }];
+
+        try {
+            saveWishlist(places);
+            if (status) status.textContent = `${name} added to your wishlist.`;
+            form.reset();
+            if (addDetails instanceof HTMLDetailsElement) addDetails.open = false;
+            renderWishlist();
+        } catch (error) {
+            console.error('Unable to save the wishlist.', error);
+            try {
+                places = readWishlist();
+            } catch (readError) {
+                console.error('Unable to reload the saved wishlist.', readError);
+            }
+            if (status) status.textContent = 'Could not save your wishlist. Browser storage may be unavailable.';
+            renderWishlist();
+        }
+    });
+
+    list?.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const button = target.closest<HTMLButtonElement>('[data-remove-wishlist]');
+        if (!button) return;
+
+        const place = places.find((entry) => entry.id === button.dataset.removeWishlist);
+        places = places.filter((entry) => entry.id !== button.dataset.removeWishlist);
+        try {
+            saveWishlist(places);
+            if (status && place) status.textContent = `${place.name} removed from your wishlist.`;
+            renderWishlist();
+        } catch (error) {
+            console.error('Unable to update the saved wishlist.', error);
+            loadWishlist();
+        }
+    });
+
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'coffee-roamer-wishlist') loadWishlist();
+    });
+
+    loadWishlist();
+</script>
+
+<style>
+    #wishlist-manager {
+        max-width: 95vw;
+        margin: 1.5em auto;
+        padding: 1em;
+        border: 1px solid rgba(var(--shadow), 25%);
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    .wishlist-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1em;
+        flex-wrap: wrap;
+    }
+
+    .wishlist-heading p {
+        font-size: 0.8em;
+    }
+
+    #wishlist-add summary {
+        cursor: pointer;
+        border: 1px solid currentColor;
+        border-radius: 8px;
+        padding: 0.2em 0.6em;
+        list-style: none;
+    }
+
+    #wishlist-add summary::-webkit-details-marker {
+        display: none;
+    }
+
+    #wishlist-form {
+        display: grid;
+        gap: 0.6em;
+        width: min(100%, 24rem);
+        margin-top: 0.75em;
+    }
+
+    #wishlist-form label {
+        display: grid;
+        gap: 0.15em;
+        font-size: 0.75em;
+    }
+
+    #wishlist-form input,
+    #wishlist-form textarea {
+        box-sizing: border-box;
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+    }
+
+    .coordinate-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5em;
+    }
+
+    .save-wishlist-place,
+    .remove-wishlist-place {
+        width: fit-content;
+        border: 1px solid currentColor;
+        padding: 0.2em 0.6em;
+        cursor: pointer;
+    }
+
+    #wishlist-status {
+        min-height: 1.2em;
+        font-size: 0.75em;
+    }
+
+    #wishlist-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+        gap: 0.6em;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .wishlist-place {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5em;
+        min-width: 0;
+        padding: 0.65em;
+        border: 1px solid rgba(var(--shadow), 25%);
+        border-radius: 8px;
+        overflow-wrap: anywhere;
+    }
+
+    .wishlist-place h3,
+    .wishlist-place p {
+        margin: 0;
+    }
+
+    .wishlist-place p,
+    .wishlist-place small,
+    .wishlist-empty {
+        font-size: 0.75em;
+    }
+
+    .wishlist-notes {
+        margin-top: 0.25em !important;
+    }
+
+    @media (max-width: 600px) {
+        .wishlist-heading {
+            display: grid;
+        }
+    }
+</style>

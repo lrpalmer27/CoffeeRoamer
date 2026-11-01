@@ -55,10 +55,19 @@ main {
 
 maparea {
 	max-width: 95vw;
+	width: 100%;
+	box-sizing: border-box;
 	padding: .5em .5em;
 	display: grid;
-	grid-template-columns: minmax(min-content, 25%) auto;
+	grid-template-columns: minmax(0, 30%) minmax(0, 1fr);
 	grid-template-rows: auto auto;
+	gap: 0 .5em;
+}
+
+@media (max-width: 760px) {
+	maparea {
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
 
 .buttons{

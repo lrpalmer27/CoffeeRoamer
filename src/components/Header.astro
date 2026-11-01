@@ -56,6 +56,31 @@ import { BASE } from '../consts';
 		display: flex;
 	}
 	@media (max-width: 720px) {
+		nav {
+			flex-direction: column;
+			gap: 0.25em;
+			padding: 0.5em 0;
+		}
+
+		nav > div:first-child > a {
+			justify-content: center;
+			padding: 0.25em;
+		}
+
+		.internal-links {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 0.25em;
+			max-width: 100%;
+		}
+
+		.internal-links a {
+			padding: 0.4em 0.5em;
+			white-space: nowrap;
+			font-size: 0.85em;
+		}
+
 		.social-links {
 			display: none;
 		}
