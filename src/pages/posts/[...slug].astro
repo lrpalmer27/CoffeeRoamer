@@ -15,12 +15,13 @@ export async function getStaticPaths() {
 		props: {
 			...post,
 			galleryImages: Object.entries(galleryPhotoUrls)
-				.filter(([path]) => {
+				.filter(([path]) => path.startsWith(`/src/content/blog/${post.id}/`))
+				.sort(([pathA], [pathB]) => {
 					const heroFilename = post.data.heroImage?.src?.split('/').pop()?.split('.')[0];
-					return path.startsWith(`/src/content/blog/${post.id}/`)
-						&& path.split('/').pop()?.split('.')[0] !== heroFilename;
+					const isHero = (path: string) => path.split('/').pop()?.split('.')[0] === heroFilename;
+					if (isHero(pathA) !== isHero(pathB)) return isHero(pathA) ? -1 : 1;
+					return pathA.localeCompare(pathB, undefined, { numeric: true });
 				})
-				.sort(([pathA], [pathB]) => pathA.localeCompare(pathB, undefined, { numeric: true }))
 				.map(([path, src]) => ({
 					src,
 					alt: path.split('/').pop()?.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ') ?? 'Visit photo',

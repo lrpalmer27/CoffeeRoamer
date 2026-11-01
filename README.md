@@ -1,7 +1,8 @@
 # Coffee Roamer
 See scratchpad for more information for the objective of this project
 
-Dev URL: https://lrpalmer27.github.io/CoffeeRoamer/
+Deployed URL: https://lrpalmer27.github.io/CoffeeRoamer/
+Local development: npm run dev
 
 ## Map
 
