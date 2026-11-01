@@ -14,6 +14,7 @@ import MapPopupTemplate from '../components/MapPopup.astro';
   const postsData = document.getElementById("coffee-posts-data");
   const posts = JSON.parse(postsData?.textContent ?? "[]");
   window.posts = posts;
+  window.mapVisibilityReady = false;
   window.wishlistPlaces ??= [];
 
   const initMap = () => {
@@ -227,6 +228,7 @@ import MapPopupTemplate from '../components/MapPopup.astro';
       posts.forEach((post) => {
         post.data.mapvis = visibleIds.has(post.id);
       });
+      window.mapVisibilityReady = true;
 
       if (typeof window.updateFeaturedCardsList === 'function') {
         window.updateFeaturedCardsList();
