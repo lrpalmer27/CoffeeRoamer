@@ -5,7 +5,7 @@ location: Calle Carmen, Santa Teresa, Puntarenas Province, Manzanillo, Costa Ric
 city: Santa Teresa, CR
 coords: [9.651063285882863, -85.17565944687533]
 pubDate: '02/28/2026'
-heroImage: '../../assets/CafeSocial_CR.jpg'
+heroImage: './CafeSocial_CR.jpg'
 
 ParkingRanking: 1.5
 PastriesRanking: 3
@@ -17,4 +17,3 @@ American style coffee in the tourist surfing town of Santa Teresa. Semi-authenti
 A few parking spots out front.
 
 Great american style breakfast, fantastic cappucinos, very friendly staff. Overall great experience.
-

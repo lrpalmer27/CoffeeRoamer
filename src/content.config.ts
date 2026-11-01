@@ -1,10 +1,15 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { boolean } from 'astro:schema';
+import { slug as githubSlug } from 'github-slugger';
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+	loader: glob({
+		base: './src/content/blog',
+		pattern: '**/*.{md,mdx}',
+		generateId: ({ entry }) => githubSlug(entry.split('/').pop()?.replace(/\.(md|mdx)$/i, '') ?? entry),
+	}),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({

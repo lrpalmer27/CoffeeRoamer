@@ -5,7 +5,7 @@ location: '101 Main St, Seal Beach, CA 90740'
 city: Seal Beach, CA
 coords: [33.7436606445841, -118.10420338928637]
 pubDate: '03/22/2026'
-heroImage: '../../assets/CafeMarina.JPG'
+heroImage: './CafeMarina.JPG'
 
 ParkingRanking: 1
 PastriesRanking: 0.25
