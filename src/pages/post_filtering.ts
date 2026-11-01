@@ -11,7 +11,6 @@ const filterChips: Record<string, string> = {
     VisOnMap: 'vizActiveFilter',
     Rating: 'RatingActiveFilter',
     Date: 'DateActiveFilter',
-    plcholder: 'plcholderActiveFilter',
     WishlistPins: 'wishlistActiveFilter',
 };
 
@@ -47,23 +46,14 @@ const setFilterActive = (filterId: string, isActive: boolean) => {
     if (options) options.toggleAttribute('hidden', !isActive);
 };
 
-const getLocalDate = () => {
-    const now = new Date();
-    const offset = now.getTimezoneOffset() * 60_000;
-    return new Date(now.getTime() - offset).toISOString().slice(0, 10);
-};
-
 export function updateFeaturedCardsList() {
     const posts = (window as Window & { posts?: FilterPost[] }).posts ?? [];
     const showVisibleOnly = activeFilterButton('VisOnMap')?.classList.contains('active') ?? false;
     const ratingActive = activeFilterButton('Rating')?.classList.contains('active') ?? false;
     const dateActive = activeFilterButton('Date')?.classList.contains('active') ?? false;
-    const futureActive = activeFilterButton('plcholder')?.classList.contains('active') ?? false;
     const minRating = Number((document.getElementById('minRating') as HTMLSelectElement | null)?.value ?? 0);
     const fromDate = (document.getElementById('visitDateFrom') as HTMLInputElement | null)?.value ?? '';
     const throughDate = (document.getElementById('visitDateThrough') as HTMLInputElement | null)?.value ?? '';
-    const today = getLocalDate();
-
     posts.forEach((post) => {
         const card = document.getElementById(post.id);
         if (!card) return;
@@ -76,8 +66,7 @@ export function updateFeaturedCardsList() {
                 Boolean(visitedDate) &&
                 (!fromDate || visitedDate >= fromDate) &&
                 (!throughDate || visitedDate <= throughDate)
-            )) &&
-            (!futureActive || visitedDate > today);
+            ));
 
         card.style.display = matches ? '' : 'none';
     });
@@ -136,6 +125,7 @@ if (typeof document !== 'undefined') {
     });
 
     window.updateFeaturedCardsList = updateFeaturedCardsList;
+    setFilterActive('VisOnMap', true);
     document.addEventListener('DOMContentLoaded', updateFeaturedCardsList, { once: true });
 }
 

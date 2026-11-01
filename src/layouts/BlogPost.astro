@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
@@ -7,10 +8,18 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts.ts';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface GalleryImage {
+	src: ImageMetadata;
+	alt: string;
+}
+
+interface Props extends CollectionEntry<'blog'>['data'] {
+	galleryImages?: GalleryImage[];
+}
 
 const { title, description, location, pubDate, updatedDate, heroImage,
 	OverallRanking, CoffeeRanking, PastriesRanking, ParkingRanking,	coords,
+	galleryImages = [],
  	} = Astro.props;
 ---
 
@@ -53,6 +62,57 @@ const { title, description, location, pubDate, updatedDate, heroImage,
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+			.photo-gallery {
+				box-sizing: border-box;
+				width: 100%;
+				margin: 2rem auto;
+			}
+			.gallery-viewport {
+				overflow: hidden;
+				border-radius: 12px;
+			}
+			.gallery-track {
+				display: flex;
+				gap: var(--gallery-gap);
+				width: max-content;
+				--gallery-gap: 0.35rem;
+			}
+			.gallery-viewport.is-draggable {
+				cursor: grab;
+				touch-action: pan-y;
+				user-select: none;
+			}
+			.gallery-viewport.is-dragging {
+				cursor: grabbing;
+			}
+			.gallery-viewport.is-draggable img {
+				-webkit-user-drag: none;
+			}
+			.gallery-track figure {
+				flex: 0 0 clamp(13rem, 30vw, 24rem);
+				margin: 0;
+			}
+			.gallery-track img {
+				display: block;
+				width: 100%;
+				height: 18rem;
+				border-radius: 0;
+				object-fit: contain;
+				background: transparent;
+			}
+			@media (max-width: 600px) {
+				.gallery-track img {
+					height: 14rem;
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.gallery-viewport {
+					overflow-x: auto;
+				}
+				.gallery-viewport.is-draggable {
+					cursor: auto;
+				}
 			}
 		</style>
 	</head>
@@ -105,9 +165,130 @@ const { title, description, location, pubDate, updatedDate, heroImage,
 					</div>
 					</div>
 				</div>
+				{galleryImages.length > 0 && (
+					<section class="photo-gallery" aria-label="Visit photos">
+						<div class="gallery-viewport">
+						<div
+							class:list={['gallery-track', { 'is-moving': galleryImages.length > 1 }]}
+						>
+							{galleryImages.map((photo) => (
+								<figure>
+									<Image src={photo.src} alt={photo.alt} loading="lazy" />
+								</figure>
+							))}
+						</div>
+						</div>
+					</section>
+				)}
 			</article>
 		</main>
 		<Footer />
+		<script>
+			document.querySelectorAll<HTMLElement>('.gallery-viewport').forEach((viewport) => {
+				const track = viewport.querySelector<HTMLElement>('.gallery-track.is-moving');
+				if (!track) return;
+				const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+				if (reduceMotion.matches) return;
+
+				viewport.classList.add('is-draggable');
+
+				let offset = 0;
+				let lastFrame = 0;
+				let lastPointerX = 0;
+				let lastPointerTime = 0;
+				let flingSpeed = 0;
+				let hovering = false;
+				let dragging = false;
+				let pointerId: number | null = null;
+
+				const render = () => {
+					track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+				};
+
+				const recycleItems = () => {
+					const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+
+					while (offset >= 0) {
+						const first = track.firstElementChild as HTMLElement | null;
+						if (!first) return;
+						const step = first.getBoundingClientRect().width + gap;
+						if (offset < step) break;
+						track.append(first);
+						offset -= step;
+					}
+
+					while (offset < 0) {
+						const last = track.lastElementChild as HTMLElement | null;
+						if (!last) return;
+						const step = last.getBoundingClientRect().width + gap;
+						track.prepend(last);
+						offset += step;
+					}
+				};
+
+				const stopDragging = (event: PointerEvent) => {
+					if (event.pointerId !== pointerId) return;
+					pointerId = null;
+					dragging = false;
+					viewport.classList.remove('is-dragging');
+					if (viewport.hasPointerCapture(event.pointerId)) {
+						viewport.releasePointerCapture(event.pointerId);
+					}
+				};
+
+				viewport.addEventListener('pointerdown', (event) => {
+					if (!event.isPrimary || event.button !== 0) return;
+					event.preventDefault();
+					pointerId = event.pointerId;
+					lastPointerX = event.clientX;
+					lastPointerTime = event.timeStamp;
+					flingSpeed = 0;
+					dragging = true;
+					viewport.classList.add('is-dragging');
+					viewport.setPointerCapture(pointerId);
+				});
+
+				viewport.addEventListener('pointermove', (event) => {
+					if (!dragging || event.pointerId !== pointerId) return;
+					const delta = event.clientX - lastPointerX;
+					const elapsed = Math.max(1, event.timeStamp - lastPointerTime);
+					offset -= delta;
+					flingSpeed = Math.max(-180, Math.min(180, (-delta / elapsed) * 900));
+					lastPointerX = event.clientX;
+					lastPointerTime = event.timeStamp;
+					recycleItems();
+					render();
+				});
+
+				viewport.addEventListener('pointerup', stopDragging);
+				viewport.addEventListener('pointercancel', stopDragging);
+				viewport.addEventListener('lostpointercapture', stopDragging);
+				viewport.addEventListener('pointerenter', (event) => {
+					if (event.pointerType === 'mouse') hovering = true;
+				});
+				viewport.addEventListener('pointerleave', (event) => {
+					if (event.pointerType === 'mouse') hovering = false;
+				});
+
+				const animate = (time: number) => {
+					const elapsed = lastFrame ? Math.min(time - lastFrame, 50) : 0;
+					lastFrame = time;
+
+					if (!dragging && !hovering) {
+						const decay = Math.exp(-elapsed / 900);
+						const speed = 24 + flingSpeed;
+						offset += (speed * elapsed) / 1000;
+						flingSpeed *= decay;
+						recycleItems();
+						render();
+					}
+
+					requestAnimationFrame(animate);
+				};
+
+				requestAnimationFrame(animate);
+			});
+		</script>
 	</body>
 </html>
 
