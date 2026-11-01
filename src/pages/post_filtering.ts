@@ -49,6 +49,7 @@ const setFilterActive = (filterId: string, isActive: boolean) => {
 export function updateFeaturedCardsList() {
     const posts = (window as Window & { posts?: FilterPost[] }).posts ?? [];
     const showVisibleOnly = activeFilterButton('VisOnMap')?.classList.contains('active') ?? false;
+    const mapVisibilityReady = window.mapVisibilityReady ?? false;
     const ratingActive = activeFilterButton('Rating')?.classList.contains('active') ?? false;
     const dateActive = activeFilterButton('Date')?.classList.contains('active') ?? false;
     const minRating = Number((document.getElementById('minRating') as HTMLSelectElement | null)?.value ?? 0);
@@ -60,7 +61,7 @@ export function updateFeaturedCardsList() {
 
         const visitedDate = post.data.pubDate.slice(0, 10);
         const matches =
-            (!showVisibleOnly || post.data.mapvis) &&
+            (!showVisibleOnly || !mapVisibilityReady || post.data.mapvis) &&
             (!ratingActive || post.data.OverallRanking >= minRating) &&
             (!dateActive || (
                 Boolean(visitedDate) &&
@@ -132,6 +133,7 @@ if (typeof document !== 'undefined') {
 declare global {
     interface Window {
         updateFeaturedCardsList: typeof updateFeaturedCardsList;
+        mapVisibilityReady?: boolean;
         setWishlistVisible?: (visible: boolean) => void;
     }
 }
